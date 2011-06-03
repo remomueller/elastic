@@ -6,10 +6,12 @@ gem 'rails', '3.0.7'
 gem 'mysql2', '0.2.7'
 
 # Gems used by project
+gem 'carrierwave'         # File Uploads
 gem 'devise', '1.1.7'     # User Authorization
 gem 'kaminari'            # Pagination
 gem 'mail'                # Emails
 gem 'omniauth', '0.1.6'   # User Multi-Authentication
+gem 'rubytorrent-allspice'# RubyTorrent library
 
 # Use unicorn as the web server
 # gem 'unicorn'

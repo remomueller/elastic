@@ -1,5 +1,7 @@
 Elastic::Application.routes.draw do
 
+  resources :torrents
+
   match '/auth/:provider/callback' => 'authentications#create'
   match '/auth/failure' => 'authentications#failure'
 

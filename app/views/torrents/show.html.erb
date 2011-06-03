@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @torrent.user_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @torrent.name %>
+</p>
+
+<p>
+  <b>Files:</b>
+  <%= @torrent.files %>
+</p>
+
+<p>
+  <b>Trackers:</b>
+  <%= @torrent.trackers %>
+</p>
+
+<p>
+  <b>Info hash:</b>
+  <%= @torrent.info_hash %>
+</p>
+
+<p>
+  <b>Torrent file:</b>
+  <%= @torrent.torrent_file %>
+</p>
+
+<p>
+  <b>Comments:</b>
+  <%= @torrent.comments %>
+</p>
+
+
+<%= link_to 'Edit', edit_torrent_path(@torrent) %> |
+<%= link_to 'Back', torrents_path %>
