@@ -12,6 +12,7 @@ config/initializers/site_name.rb
 
 public/stylesheets/cache/*
 public/javascripts/cache/*
+public/uploads/*
 
 public/cache/*
 
