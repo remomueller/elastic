@@ -21,7 +21,7 @@
     <td><%= torrent.files %></td>
     <td><%= torrent.trackers %></td>
     <td><%= torrent.info_hash %></td>
-    <td><%= link_to File.basename(torrent.torrent_file_url), torrent.torrent_file_url if torrent.torrent_file and torrent.torrent_file_url %></td>
+    <td><%= link_to File.basename(torrent.torrent_file.path), SITE_URL + torrent.torrent_file.url, :class => 'noicon' if torrent.torrent_file and torrent.torrent_file.url %></td>
     <td><%= torrent.comments %></td>
     <td><%= link_to 'Show', torrent %></td>
     <td><%= link_to 'Edit', edit_torrent_path(torrent) %></td>
