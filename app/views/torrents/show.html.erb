@@ -27,7 +27,7 @@
 
 <p>
   <b>Torrent file:</b>
-  <%= @torrent.torrent_file %>
+  <%= link_to File.basename(@torrent.torrent_file_url), @torrent.torrent_file_url if @torrent.torrent_file and @torrent.torrent_file_url %>
 </p>
 
 <p>
