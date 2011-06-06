@@ -17,7 +17,7 @@
 <% @torrents.each do |torrent| %>
   <tr>
     <td><%= torrent.user_id %></td>
-    <td><%= torrent.name %></td>
+    <td><%= link_to torrent.name, torrent %></td>
     <td><%= torrent.files %></td>
     <td><%= torrent.trackers %></td>
     <td><%= torrent.info_hash %></td>
