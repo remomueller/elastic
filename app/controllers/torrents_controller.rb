@@ -1,6 +1,7 @@
 class TorrentsController < ApplicationController
-  # GET /torrents
-  # GET /torrents.xml
+  before_filter :authenticate_user!
+  before_filter :check_system_admin
+  
   def index
     @torrents = Torrent.all
 
@@ -10,8 +11,6 @@ class TorrentsController < ApplicationController
     end
   end
 
-  # GET /torrents/1
-  # GET /torrents/1.xml
   def show
     @torrent = Torrent.find(params[:id])
 
@@ -30,10 +29,9 @@ class TorrentsController < ApplicationController
     redirect_to root_path unless @torrent
   end
 
-  # POST /torrents
-  # POST /torrents.xml
   def create
-    @torrent = Torrent.new(params[:torrent])
+    @torrent = current_user.torrents.new(params[:torrent])
+    @torrent.generate_torrent!(params[:target_file_name])
 
     if @torrent.save
       redirect_to(@torrent, :notice => 'Torrent was successfully created.')
@@ -42,31 +40,19 @@ class TorrentsController < ApplicationController
     end
   end
 
-  # PUT /torrents/1
-  # PUT /torrents/1.xml
   def update
     @torrent = Torrent.find(params[:id])
 
-    respond_to do |format|
-      if @torrent.update_attributes(params[:torrent])
-        format.html { redirect_to(@torrent, :notice => 'Torrent was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @torrent.errors, :status => :unprocessable_entity }
-      end
+    if @torrent.update_attributes(params[:torrent])
+      redirect_to(@torrent, :notice => 'Torrent was successfully updated.')
+    else
+      render :action => "edit"
     end
   end
 
-  # DELETE /torrents/1
-  # DELETE /torrents/1.xml
   def destroy
     @torrent = Torrent.find(params[:id])
     @torrent.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(torrents_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to torrents_path
   end
 end

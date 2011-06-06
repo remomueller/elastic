@@ -12,10 +12,6 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :user_id %><br />
-    <%= f.text_field :user_id %>
-  </div>
-  <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
@@ -28,12 +24,8 @@
     <%= f.text_area :trackers %>
   </div>
   <div class="field">
-    <%= f.label :info_hash %><br />
-    <%= f.text_field :info_hash %>
-  </div>
-  <div class="field">
-    <%= f.label :torrent_file %><br />
-    <%= f.text_field :torrent_file %>
+    <%= label 'target', 'file_name', 'Target file name' %><br />
+    <%= text_field_tag :target_file_name %>
   </div>
   <div class="field">
     <%= f.label :comments %><br />
