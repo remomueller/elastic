@@ -44,6 +44,7 @@ class TorrentsController < ApplicationController
     @torrent = Torrent.find(params[:id])
 
     if @torrent.update_attributes(params[:torrent])
+      @torrent.generate_torrent!(params[:target_file_name]) unless params[:target_file_name].blank?
       redirect_to(@torrent, :notice => 'Torrent was successfully updated.')
     else
       render :action => "edit"
