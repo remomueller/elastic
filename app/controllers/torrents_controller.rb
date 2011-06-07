@@ -22,6 +22,11 @@ class TorrentsController < ApplicationController
 
   def new
     @torrent = current_user.torrents.new
+    
+    respond_to do |format|
+      format.html # new.html.erb
+      format.xml  { render :xml => @torrent }
+    end
   end
 
   def edit
@@ -30,30 +35,44 @@ class TorrentsController < ApplicationController
   end
 
   def create
+    logger.debug params.inspect
     @torrent = current_user.torrents.new(params[:torrent])
     @torrent.generate_torrent!(params[:target_file_name])
 
-    if @torrent.save
-      redirect_to(@torrent, :notice => 'Torrent was successfully created.')
-    else
-      render :action => "new"
+    respond_to do |format|
+      if @torrent.save
+        format.html { redirect_to(@torrent, :notice => 'Torrent was successfully created.') }
+        format.xml  { render :xml => @torrent, :status => :created, :location => @torrent }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @torrent.errors, :status => :unprocessable_entity }
+      end
     end
   end
 
   def update
     @torrent = Torrent.find(params[:id])
-
-    if @torrent.update_attributes(params[:torrent])
-      @torrent.generate_torrent!(params[:target_file_name]) unless params[:target_file_name].blank?
-      redirect_to(@torrent, :notice => 'Torrent was successfully updated.')
-    else
-      render :action => "edit"
+    
+    respond_to do |format|
+      if @torrent.update_attributes(params[:torrent])
+        @torrent.generate_torrent!(params[:target_file_name]) unless params[:target_file_name].blank?
+        format.html { redirect_to(@torrent, :notice => 'Torrent was successfully updated.') }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @torrent.errors, :status => :unprocessable_entity }
+      end
     end
+    
   end
 
   def destroy
     @torrent = Torrent.find(params[:id])
     @torrent.destroy
-    redirect_to torrents_path
+    
+    respond_to do |format|
+      format.html { redirect_to(torrents_path) }
+      format.xml  { head :ok }
+    end
   end
 end
