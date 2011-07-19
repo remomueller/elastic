@@ -1,5 +1,6 @@
 class Torrent < ActiveRecord::Base
   mount_uploader :torrent_file, FileUploader
+  mount_uploader :executable_file, FileUploader
 
   # Generate a torrent from the tracker if a file isn't provided.
   def generate_torrent!(target_file_name, piece_size = 256)
@@ -7,13 +8,36 @@ class Torrent < ActiveRecord::Base
     target_file_name += "_" + Time.now.strftime("%Y%m%d_%H%M%S") + ".torrent"
     target_file_name = File.join('tmp', 'files', target_file_name)
     
+    logger.debug self.inspect
+    logger.debug target_file_name
+    
+    logger.debug self.files.split(/[\r\n]/)
+    logger.debug self.trackers.split(/[\r\n]/)
+    logger.debug piece_size
+    logger.debug self.comments
+    
     RubyTorrent::Generate.new(target_file_name, self.files.split(/[\r\n]/), self.trackers.split(/[\r\n]/), piece_size, self.comments)
     
     if File.exists?(target_file_name)
       self.torrent_file = File.open(target_file_name)
       self.save
       File.delete(target_file_name)
+      
+      
+      if ENV['OS'] == "Windows_NT"
+        begin
+          logger.debug Dir.pwd
+          script_file = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), 'rtpeercursescomplete.rb')
+        
+          logger.debug "script_file #{script_file}"
+        
+          logger.debug `ocra #{script_file} #{name}`
+        rescue => e
+          logger.debug "Exception: #{e.inspect}"
+        end
+      end
     end
+    
   end
   
   # def my_att
