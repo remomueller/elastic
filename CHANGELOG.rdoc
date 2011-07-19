@@ -1,0 +1,22 @@
+== Planned
+
+* Documentation
+
+* Enhancements
+
+* Refactoring
+
+* Test Coverage
+
+== 0.2.0
+
+* Enhancements
+  *
+
+== 0.1.0
+
+* Initial implementation of torrents controller
+
+== 0.0.0
+
+* Initial version with user, authentications, menu, stylesheets, images, and javascript.
