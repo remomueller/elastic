@@ -15,7 +15,13 @@ class Torrent < ActiveRecord::Base
       File.delete(target_file_name)
     end
   end
-
-
+  
+  # def my_att
+  #   5
+  # end
+  # 
+  # def to_xml
+  #   super(:except => 'id')
+  # end
 
 end
