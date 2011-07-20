@@ -7,6 +7,8 @@ class Torrent < ActiveRecord::Base
     target_file_name = File.basename(target_file_name, ".torrent")
     target_file_name += "_" + Time.now.strftime("%Y%m%d_%H%M%S") + ".torrent"
     target_file_name = File.join('tmp', 'files', target_file_name)
+    executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")
+    
     
     logger.debug self.inspect
     logger.debug target_file_name
@@ -19,23 +21,45 @@ class Torrent < ActiveRecord::Base
     RubyTorrent::Generate.new(target_file_name, self.files.split(/[\r\n]/), self.trackers.split(/[\r\n]/), piece_size, self.comments)
     
     if File.exists?(target_file_name)
-      self.torrent_file = File.open(target_file_name)
-      self.save
-      File.delete(target_file_name)
       
       
       if ENV['OS'] == "Windows_NT"
         begin
           logger.debug Dir.pwd
+          
+          script_file = 'rtpeercursescomplete.rb'
+          script_file_exe = File.basename(script_file, ".rb") + ".exe"
+          script_file_path = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), script_file)
+        
+          logger.debug "ocra #{script_file_path} #{target_file_name}"
+          logger.debug `ocra #{script_file_path} #{target_file_name}`
+          
+          logger.debug "cp #{script_file_exe} #{executable_file_name}"
+          logger.debug `cp #{script_file_exe} #{executable_file_name}`
+        rescue => e
+          logger.debug "Exception: #{e.inspect}"
+        end
+      else
+        begin
+          logger.debug Dir.pwd
           script_file = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), 'rtpeercursescomplete.rb')
         
           logger.debug "script_file #{script_file}"
+          
+          logger.debug "cp #{target_file_name} #{executable_file_name}"
         
-          logger.debug `ocra #{script_file} #{name}`
+          logger.debug `cp #{target_file_name} #{executable_file_name}`
         rescue => e
           logger.debug "Exception: #{e.inspect}"
         end
       end
+      
+      self.torrent_file = File.open(target_file_name)
+      self.executable_file = File.open(executable_file_name)
+      self.save
+      File.delete(target_file_name)
+      File.delete(executable_file_name)
+      
     end
     
   end

@@ -25,7 +25,7 @@
   </div>
   <div class="field">
     <%= label 'target', 'file_name', 'Target file name' %><br />
-    <%= text_field_tag :target_file_name %>
+    <%= text_field_tag :target_file_name, @torrent.torrent_file.blank? ? '' : File.basename(@torrent.torrent_file.path.split('_')[0..-3].join('_')) %>
   </div>
   <div class="field">
     <%= f.label :comments %><br />
