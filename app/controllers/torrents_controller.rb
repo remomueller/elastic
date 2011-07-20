@@ -16,7 +16,7 @@ class TorrentsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @torrent }
+      format.xml  { render :xml => @torrent.to_xml(:methods => [:torrent_file_url, :executable_file_url]) }
     end
   end
 
@@ -42,7 +42,7 @@ class TorrentsController < ApplicationController
     respond_to do |format|
       if @torrent.save
         format.html { redirect_to(@torrent, :notice => 'Torrent was successfully created.') }
-        format.xml  { render :xml => @torrent, :status => :created, :location => @torrent }
+        format.xml  { render :xml => @torrent.to_xml(:methods => [:torrent_file_url, :executable_file_url]), :status => :created, :location => @torrent }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @torrent.errors, :status => :unprocessable_entity }
