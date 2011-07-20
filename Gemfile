@@ -15,6 +15,11 @@ gem 'systemu', '~> 2.2.0'  # Running Ocra system command
 gem 'ocra', :platforms => [:mingw]
 gem 'rubytorrent-allspice' # RubyTorrent library
 
+# For announce portion of application.
+gem 'ruby-tracker', :git => 'git://github.com/shaggyone/ruby-tracker.git'
+gem 'bencode', :git => 'git://github.com/shaggyone/ruby-bencode.git'
+gem 'bencoded-record', :git => 'git://github.com/shaggyone/bencoded-record.git'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
