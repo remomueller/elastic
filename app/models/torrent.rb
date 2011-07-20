@@ -31,10 +31,22 @@ class Torrent < ActiveRecord::Base
           script_file_exe = File.basename(script_file, ".rb") + ".exe"
           script_file_path = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), script_file)
         
-          logger.debug "ocra #{script_file_path} #{target_file_name}"
-          logger.debug `ocra #{script_file_path} #{target_file_name}`
+          ocra_cmd = "ocra #{script_file_path} #{target_file_name}"
+          logger.debug ocra_cmd
+          status = Open4::popen4(ocra_cmd) do |pid, stdin, stdout, stderr|
+            logger.debug "PID #{pid}" 
+          end
           
-          logger.debug "cp #{script_file_exe} #{executable_file_name}"
+          logger.debug status
+          
+          cp_cmd = "cp #{script_file_exe} #{executable_file_name}"
+          logger.debug cp_cmd
+          status = Open4::popen4(cp_cmd) do |pid, stdin, stdout, stderr|
+            logger.debug "PID #{pid}" 
+          end
+          
+          logger.debug status
+
           logger.debug `cp #{script_file_exe} #{executable_file_name}`
         rescue => e
           logger.debug "Exception: #{e.inspect}"
