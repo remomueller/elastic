@@ -18,49 +18,56 @@ class Torrent < ActiveRecord::Base
     logger.debug piece_size
     logger.debug self.comments
     
-    RubyTorrent::Generate.new(target_file_name, self.files.split(/[\r\n]/), self.trackers.split(/[\r\n]/), piece_size, self.comments)
+    updated_file_locations = []
+    self.files.split(/[\r\n]/).each do |file|
+      file_location = File.join(Rails.root, 'tmp', 'symbolic', "source_#{4}", File.basename(file))
+      updated_file_locations << file_location if File.exists?(file_location)
+    end
     
-    if File.exists?(target_file_name)
+    if updated_file_locations.size > 0
+      RubyTorrent::Generate.new(target_file_name, update_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
+    
+      if File.exists?(target_file_name)
       
       
-      if ENV['OS'] == "Windows_NT"
-        begin
-          logger.debug Dir.pwd
+        if ENV['OS'] == "Windows_NT"
+          begin
+            logger.debug Dir.pwd
           
-          script_file = 'rtpeercursescomplete.rb'
-          script_file_exe = File.basename(script_file, ".rb") + ".exe"
-          script_file_path = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), script_file)
+            script_file = 'rtpeercursescomplete.rb'
+            script_file_exe = File.basename(script_file, ".rb") + ".exe"
+            script_file_path = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), script_file)
         
-          ocra_cmd = "ocra #{script_file_path} #{target_file_name}"
-          logger.debug ocra_cmd
-          t = Time.now
-          logger.debug "Waiting on ocra..."
-          status, stdout, stderr = 
-            systemu ocra_cmd do |cid|
-              logger.debug "   #{Time.now - t}"
-              sleep 1
-            end
-          logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
+            ocra_cmd = "ocra #{script_file_path} #{target_file_name}"
+            logger.debug ocra_cmd
+            t = Time.now
+            logger.debug "Waiting on ocra..."
+            status, stdout, stderr = 
+              systemu ocra_cmd do |cid|
+                logger.debug "   #{Time.now - t}"
+                sleep 1
+              end
+            logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
           
-          FileUtils.mv(script_file_exe, executable_file_name)
+            FileUtils.mv(script_file_exe, executable_file_name)
+          rescue => e
+            logger.debug "Exception: #{e.inspect}"
+          end
+        end
+      
+        self.torrent_file = File.open(target_file_name)
+        self.executable_file = File.open(executable_file_name)
+        self.save
+
+        begin
+          FileUtils.chmod(0777, target_file_name)
+          FileUtils.chmod(0777, executable_file_name)
+          File.delete(target_file_name)
+          File.delete(executable_file_name)
         rescue => e
           logger.debug "Exception: #{e.inspect}"
         end
       end
-      
-      self.torrent_file = File.open(target_file_name)
-      self.executable_file = File.open(executable_file_name)
-      self.save
-
-      begin
-        FileUtils.chmod(0777, target_file_name)
-        FileUtils.chmod(0777, executable_file_name)
-        File.delete(target_file_name)
-        File.delete(executable_file_name)
-      rescue => e
-        logger.debug "Exception: #{e.inspect}"
-      end
-      
     end
     
   end
