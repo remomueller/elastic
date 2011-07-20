@@ -50,6 +50,8 @@ class Downloader < ActiveRecord::Base
           begin
             logger.debug Dir.pwd
           
+            # rtpeercursescomplete.rb should be copied next to the torrent file so OCRA correctly adds in the .torrent file.
+          
             script_file = 'rtpeercursescomplete.rb'
             script_file_exe = File.basename(script_file, ".rb") + ".exe"
             script_file_path = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), script_file)
