@@ -30,7 +30,7 @@ class Torrent < ActiveRecord::Base
     end
     
     if updated_file_locations.size > 0
-      RubyTorrent::Generate.new(target_file_name, update_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
+      RubyTorrent::Generate.new(target_file_name, updated_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
     
       if File.exists?(target_file_name)
       
