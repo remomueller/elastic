@@ -21,7 +21,12 @@ class Torrent < ActiveRecord::Base
     updated_file_locations = []
     self.files.split(/[\r\n]/).each do |file|
       file_location = File.join(Rails.root, 'tmp', 'symbolic', "source_#{4}", File.basename(file))
-      updated_file_locations << file_location if File.exists?(file_location)
+      if File.exists?(file_location)
+        updated_file_locations << file_location
+        Rails.logger.debug "#{file_location} ADDED!"
+      else
+        Rails.logger.debug "#{file_location} does NOT exist"
+      end
     end
     
     if updated_file_locations.size > 0
