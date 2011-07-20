@@ -41,31 +41,8 @@ class Torrent < ActiveRecord::Base
               sleep 1
             end
           logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
-          cp_cmd = "cp #{script_file_exe} #{executable_file_name}"
-          logger.debug cp_cmd
-          t = Time.now
-          logger.debug "Waiting on cp..."
-          status, stdout, stderr =
-            systemu cp_cmd do |cid|
-              logger.debug "   #{Time.now - t}"
-              sleep 1
-            end
-          logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
-
-          # logger.debug `cp #{script_file_exe} #{executable_file_name}`
-        rescue => e
-          logger.debug "Exception: #{e.inspect}"
-        end
-      else
-        begin
-          logger.debug Dir.pwd
-          script_file = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), 'rtpeercursescomplete.rb')
-        
-          logger.debug "script_file #{script_file}"
           
-          logger.debug "cp #{target_file_name} #{executable_file_name}"
-        
-          logger.debug `cp #{target_file_name} #{executable_file_name}`
+          FileUtils.mv(script_file_exe, executable_file_name)
         rescue => e
           logger.debug "Exception: #{e.inspect}"
         end
@@ -74,8 +51,13 @@ class Torrent < ActiveRecord::Base
       self.torrent_file = File.open(target_file_name)
       self.executable_file = File.open(executable_file_name)
       self.save
-      File.delete(target_file_name)
-      File.delete(executable_file_name)
+
+      begin
+        File.delete(target_file_name)
+        File.delete(executable_file_name)
+      rescue => e
+        logger.debug "Exception: #{e.inspect}"
+      end
       
     end
     
