@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 
   # Model Relationships
   has_many :authentications
-  has_many :torrents #, :conditions => {:deleted => false}
+  has_many :downloaders #, :conditions => {:deleted => false}
 
   # User Methods
   

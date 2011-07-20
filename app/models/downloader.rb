@@ -1,4 +1,4 @@
-class Torrent < ActiveRecord::Base
+class Downloader < ActiveRecord::Base
   mount_uploader :torrent_file, FileUploader
   mount_uploader :executable_file, FileUploader
 
@@ -13,7 +13,7 @@ class Torrent < ActiveRecord::Base
     (self.executable_file and self.executable_file.url) ? SITE_URL + self.executable_file.url : ''
   end
 
-  # Generate a torrent from the tracker if a file isn't provided.
+  # Generate a downloader from the tracker if a file isn't provided.
   def generate_torrent!(target_file_name, piece_size = 256)
     target_file_name = File.basename(target_file_name, ".torrent")
     target_file_name += "_" + Time.now.strftime("%Y%m%d_%H%M%S") + ".torrent"

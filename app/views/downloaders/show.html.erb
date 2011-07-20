@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @downloader.user_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @downloader.name %>
+</p>
+
+<p>
+  <b>Files:</b>
+  <%= @downloader.files %>
+</p>
+
+<p>
+  <b>Trackers:</b>
+  <%= @downloader.trackers %>
+</p>
+
+<p>
+  <b>Info hash:</b>
+  <%= @downloader.info_hash %>
+</p>
+
+<p>
+  <b>Torrent file:</b>
+  <%= link_to File.basename(@downloader.torrent_file.path), SITE_URL + @downloader.torrent_file.url, :class => 'noicon' if @downloader.torrent_file and @downloader.torrent_file.url %>
+</p>
+
+<p>
+  <b>Executable file:</b>
+  <%= link_to File.basename(@downloader.executable_file.path), SITE_URL + @downloader.executable_file.url, :class => 'noicon' if @downloader.executable_file and @downloader.executable_file.url %>
+</p>
+
+<p>
+  <b>Comments:</b>
+  <%= @downloader.comments %>
+</p>
+
+
+<%= link_to 'Edit', edit_downloader_path(@downloader) %> |
+<%= link_to 'Back', downloaders_path %>

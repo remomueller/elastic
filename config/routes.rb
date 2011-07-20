@@ -3,12 +3,12 @@ Elastic::Application.routes.draw do
   match "/announce" => "sites#announce", :as => :announce
   match "/scrape" => "sites#scrape", :as => :scrape
 
-  resources :torrents
-
   match '/auth/:provider/callback' => 'authentications#create'
   match '/auth/failure' => 'authentications#failure'
 
   resources :authentications
+
+  resources :downloaders
 
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path_names => { :sign_up => 'register', :sign_in => 'login' }
 

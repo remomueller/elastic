@@ -1,10 +1,6 @@
 class SitesController < ApplicationController
   before_filter :authenticate_user!, :except => [ :about, :announce, :scrape ]
   
-  def generate_torrent
-    
-  end
-  
   def announce
     
     # puts $tracker.torrent_directory.inspect if $tracker

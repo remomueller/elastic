@@ -1,10 +1,10 @@
-<%= form_for(@torrent) do |f| %>
-  <% if @torrent.errors.any? %>
+<%= form_for(@downloader) do |f| %>
+  <% if @downloader.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@torrent.errors.count, "error") %> prohibited this torrent from being saved:</h2>
+      <h2><%= pluralize(@downloader.errors.count, "error") %> prohibited this downloader from being saved:</h2>
 
       <ul>
-      <% @torrent.errors.full_messages.each do |msg| %>
+      <% @downloader.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>
@@ -25,7 +25,7 @@
   </div>
   <div class="field">
     <%= label 'target', 'file_name', 'Target file name' %><br />
-    <%= text_field_tag :target_file_name, @torrent.torrent_file.blank? ? '' : File.basename(@torrent.torrent_file.path.split('_')[0..-3].join('_')) %>
+    <%= text_field_tag :target_file_name, @downloader.torrent_file.blank? ? '' : File.basename(@downloader.torrent_file.path.split('_')[0..-3].join('_')) %>
   </div>
   <div class="field">
     <%= f.label :comments %><br />
