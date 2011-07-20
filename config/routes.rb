@@ -1,5 +1,8 @@
 Elastic::Application.routes.draw do
 
+  match "/announce" => "sites#announce", :as => :announce
+  match "/scrape" => "sites#scrape", :as => :scrape
+
   resources :torrents
 
   match '/auth/:provider/callback' => 'authentications#create'
