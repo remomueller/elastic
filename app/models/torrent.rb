@@ -53,8 +53,8 @@ class Torrent < ActiveRecord::Base
       self.save
 
       begin
-        FileUtils.chown(0777, target_file_name)
-        FileUtils.chown(0777, executable_file_name)
+        FileUtils.chmod(0777, target_file_name)
+        FileUtils.chmod(0777, executable_file_name)
         File.delete(target_file_name)
         File.delete(executable_file_name)
       rescue => e
