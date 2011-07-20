@@ -33,11 +33,23 @@ class Torrent < ActiveRecord::Base
         
           ocra_cmd = "ocra #{script_file_path} #{target_file_name}"
           logger.debug ocra_cmd
-          status, stdout, stderr = systemu ocra_cmd
+          t = Time.now
+          logger.debug "Waiting on ocra..."
+          status, stdout, stderr = 
+            systemu ocra_cmd do |cid|
+              logger.debug "   #{Time.now - t}"
+              sleep 1
+            end
           logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
           cp_cmd = "cp #{script_file_exe} #{executable_file_name}"
           logger.debug cp_cmd
-          status, stdout, stderr = systemu cp_cmd
+          t = Time.now
+          logger.debug "Waiting on cp..."
+          status, stdout, stderr =
+            systemu cp_cmd do |cid|
+              logger.debug "   #{Time.now - t}"
+              sleep 1
+            end
           logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
 
           # logger.debug `cp #{script_file_exe} #{executable_file_name}`
