@@ -12,6 +12,7 @@ gem 'kaminari'             # Pagination
 gem 'mail'                 # Emails
 gem 'omniauth', '0.1.6'    # User Multi-Authentication
 gem 'systemu', '~> 2.2.0'  # Running Ocra system command
+gem 'ocra', :platforms => [:mingw]
 gem 'rubytorrent-allspice' # RubyTorrent library
 
 # Use unicorn as the web server
