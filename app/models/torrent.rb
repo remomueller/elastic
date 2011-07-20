@@ -33,21 +33,14 @@ class Torrent < ActiveRecord::Base
         
           ocra_cmd = "ocra #{script_file_path} #{target_file_name}"
           logger.debug ocra_cmd
-          status = Open4::popen4(ocra_cmd) do |pid, stdin, stdout, stderr|
-            logger.debug "PID #{pid}" 
-          end
-          
-          logger.debug status
-          
+          status, stdout, stderr = systemu ocra_cmd
+          logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
           cp_cmd = "cp #{script_file_exe} #{executable_file_name}"
           logger.debug cp_cmd
-          status = Open4::popen4(cp_cmd) do |pid, stdin, stdout, stderr|
-            logger.debug "PID #{pid}" 
-          end
-          
-          logger.debug status
+          status, stdout, stderr = systemu cp_cmd
+          logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
 
-          logger.debug `cp #{script_file_exe} #{executable_file_name}`
+          # logger.debug `cp #{script_file_exe} #{executable_file_name}`
         rescue => e
           logger.debug "Exception: #{e.inspect}"
         end
