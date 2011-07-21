@@ -40,6 +40,9 @@ class Downloader < ActiveRecord::Base
       end
     end
     
+    self.files = self.files.split(/[\r\n]/).collect{|file| File.basename(file)}.join("\n")
+    self.save
+    
     if updated_file_locations.size > 0
       RubyTorrent::Generate.new(target_file_path, updated_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
     
@@ -47,41 +50,19 @@ class Downloader < ActiveRecord::Base
       
         self.generate_executable!(target_file_path)
       
-        # if ENV['OS'] == "Windows_NT"
-        #   begin
-        #     logger.debug FileUtils.pwd
-        #   
-        #     # rtpeercursescomplete.rb should be copied next to the torrent file so OCRA correctly adds in the .torrent file.
-        #   
-        #     script_file = 'rtpeercursescomplete.rb'
-        #     script_file_exe = File.basename(script_file, ".rb") + ".exe"
-        #     script_file_path = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), script_file)
-        # 
-        #     ocra_cmd = "ocra #{script_file_path} #{target_file_name}"
-        #     logger.debug ocra_cmd
-        #     t = Time.now
-        #     logger.debug "Waiting on ocra..."
-        #     status, stdout, stderr = 
-        #       systemu ocra_cmd do |cid|
-        #         logger.debug "   #{Time.now - t}"
-        #         sleep 1
-        #       end
-        #     logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
-        #   
-        #     FileUtils.mv(script_file_exe, executable_file_name)
-        #   rescue => e
-        #     logger.debug "Exception: #{e.inspect}"
-        #   end
-        # end
+        target_file = File.new(target_file_path)
       
-        self.torrent_file = File.open(target_file_path)
+        self.torrent_file = target_file
         self.save
+        
+        target_file.close
 
-        begin
-          File.delete(target_file_path)
-        rescue => e
-          logger.debug "Exception: #{e.inspect}"
-        end
+        # begin
+          logger.debug "Deleting #{target_file_path}"
+          File.delete(target_file_path) if File.exists?(target_file_path)
+        # rescue => e
+        #   logger.debug "Exception: #{e.inspect}"
+        # end
       end
     end
     
@@ -132,13 +113,16 @@ class Downloader < ActiveRecord::Base
         logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
         
         FileUtils.cd(Rails.root)
-        self.executable_file = File.open(executable_file_path)
+        
+        exe_file = File.new(executable_file_path)
+        self.executable_file = exe_file
         self.save
+        exe_file.close
         
         logger.debug "Deleting #{cp_script_file_path}"
         logger.debug "Deleting #{executable_file_path}"
-        # File.delete(cp_script_file_path)
-        # File.delete(executable_file_path)
+        File.delete(cp_script_file_path) if File.exists?(cp_script_file_path)
+        File.delete(executable_file_path) if File.exists?(executable_file_path)
       rescue => e
         logger.debug "Exception: #{e.inspect}"
       end
