@@ -16,7 +16,7 @@ class DownloadersController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url]) }
+      format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url], :except => [:torrent_file, :executable_file]) }
     end
   end
 
@@ -42,7 +42,7 @@ class DownloadersController < ApplicationController
     respond_to do |format|
       if @downloader.save
         format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
-        format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url]), :status => :created, :location => @downloader }
+        format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url], :except => [:torrent_file, :executable_file]), :status => :created, :location => @downloader }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @downloader.errors, :status => :unprocessable_entity }
