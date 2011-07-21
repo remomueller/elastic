@@ -4,9 +4,6 @@ class Downloader < ActiveRecord::Base
   
   mount_uploader :torrent_file, FileUploader
   mount_uploader :executable_file, FileUploader
-
-  attr_accessor :torrent_file_url, :file_count
-  
   
   def torrent_file_url
     (self.torrent_file and self.torrent_file.url) ? SITE_URL + self.torrent_file.url : ''
