@@ -1,4 +1,7 @@
 class Downloader < ActiveRecord::Base
+  
+  belongs_to :user
+  
   mount_uploader :torrent_file, FileUploader
   mount_uploader :executable_file, FileUploader
 

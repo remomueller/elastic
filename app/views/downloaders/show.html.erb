@@ -1,8 +1,6 @@
-<p id="notice"><%= notice %></p>
-
 <p>
-  <b>User:</b>
-  <%= @downloader.user_id %>
+  <b>Creator:</b>
+  <%= link_to @downloader.user.name, @downloader.user %>
 </p>
 
 <p>
@@ -12,7 +10,7 @@
 
 <p>
   <b>Files:</b>
-  <%= @downloader.files %>
+  <pre><%= @downloader.files %></pre>
 </p>
 
 <p>

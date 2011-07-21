@@ -35,27 +35,49 @@ class DownloadersController < ApplicationController
   end
 
   def create
+    params[:downloader][:files] = params[:downloader][:files].to_s.split(/[\r\n]/).collect{|file| File.basename(file)}.compact.uniq.sort.join("\n")
+    params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
+    params[:downloader][:name] = params[:downloader][:files].to_s.split(/[\r\n]/).first if params[:downloader][:name].blank?
+    params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
+    
     logger.debug params.inspect
-    @downloader = current_user.downloaders.new(params[:downloader])
-    @downloader.generate_torrent!(params[:target_file_name])
+    
+    @downloader = current_user.downloaders.find_by_files(params[:downloader][:files])
+    
+    if @downloader
+      respond_to do |format|
+        format.html { redirect_to(@downloader, :notice => 'Equivalent downloader retrieved.') }
+        format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url], :except => [:torrent_file, :executable_file]) }
+      end
+    else
+    
+      @downloader = current_user.downloaders.new(params[:downloader])
+      @downloader.generate_torrent!(params[:target_file_name])
 
-    respond_to do |format|
-      if @downloader.save
-        format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
-        format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url], :except => [:torrent_file, :executable_file]), :status => :created, :location => @downloader }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @downloader.errors, :status => :unprocessable_entity }
+      respond_to do |format|
+        if @downloader.save
+          format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
+          format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url], :except => [:torrent_file, :executable_file]), :status => :created, :location => @downloader }
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @downloader.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end
 
   def update
-    @downloader = Downloader.find(params[:id])
+    params[:downloader][:files] = params[:downloader][:files].to_s.split(/[\r\n]/).collect{|file| File.basename(file)}.compact.uniq.sort.join("\n")
+    params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
+    
+    logger.debug params.inspect
+    @downloader = Downloader.find_by_id(params[:id])
+    
+    same_files = (params[:downloader][:files] == @downloader.files) if @downloader
     
     respond_to do |format|
       if @downloader.update_attributes(params[:downloader])
-        @downloader.generate_torrent!(params[:target_file_name]) unless params[:target_file_name].blank?
+        @downloader.generate_torrent!(params[:target_file_name]) unless params[:target_file_name].blank? or same_files
         format.html { redirect_to(@downloader, :notice => 'Downloader was successfully updated.') }
         format.xml  { head :ok }
       else
