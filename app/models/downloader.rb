@@ -5,7 +5,7 @@ class Downloader < ActiveRecord::Base
   mount_uploader :torrent_file, FileUploader
   mount_uploader :executable_file, FileUploader
 
-  attr_accessor :torrent_file_url
+  attr_accessor :torrent_file_url, :file_count
   
   
   def torrent_file_url
@@ -14,6 +14,10 @@ class Downloader < ActiveRecord::Base
   
   def executable_file_url
     (self.executable_file and self.executable_file.url) ? SITE_URL + self.executable_file.url : ''
+  end
+  
+  def file_count
+    self.files.to_s.split(/[\r\n]/).select{|i| not i.blank?}.size
   end
 
   def self.filter_files(params_files = '')
