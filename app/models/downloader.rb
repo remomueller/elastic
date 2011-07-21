@@ -46,8 +46,10 @@ class Downloader < ActiveRecord::Base
     # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")    
     
     if updated_file_locations.size > 0
+      t = Time.now
       RubyTorrent::Generate.new(target_file_path, updated_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
-    
+      self.update_attribute :torrent_creation_time, (Time.now - t).ceil
+      
       if File.exists?(target_file_path)
       
         self.generate_executable!(target_file_path)
