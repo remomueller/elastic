@@ -49,7 +49,7 @@ class Downloader < ActiveRecord::Base
       
         # if ENV['OS'] == "Windows_NT"
         #   begin
-        #     logger.debug Dir.pwd
+        #     logger.debug FileUtils.pwd
         #   
         #     # rtpeercursescomplete.rb should be copied next to the torrent file so OCRA correctly adds in the .torrent file.
         #   
@@ -105,7 +105,7 @@ class Downloader < ActiveRecord::Base
   def generate_executable!(target_file_path)
     if ENV['OS'] == "Windows_NT"
       begin
-        logger.debug Dir.pwd
+        logger.debug FileUtils.pwd
       
         # rtpeercursescomplete.rb should be copied next to the torrent file so OCRA correctly adds in the .torrent file.
       
@@ -118,7 +118,7 @@ class Downloader < ActiveRecord::Base
     
         FileUtils.cp(script_file_path, cp_script_file_path)
     
-        Dir.cd(File.dirname(target_file_path))
+        FileUtils.cd(File.dirname(target_file_path))
         ocra_cmd = "ocra #{File.basename(cp_script_file_path)} #{File.basename(target_file_path)}"
         logger.debug ocra_cmd
         
@@ -131,7 +131,7 @@ class Downloader < ActiveRecord::Base
           end
         logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
         
-        Dir.cd(Rails.root)
+        FileUtils.cd(Rails.root)
         self.executable_file = File.open(executable_file_path)
         self.save
         
