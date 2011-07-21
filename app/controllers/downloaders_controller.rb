@@ -35,7 +35,7 @@ class DownloadersController < ApplicationController
   end
 
   def create
-    params[:downloader][:files] = params[:downloader][:files].to_s.split(/[\r\n]/).collect{|file| File.basename(file)}.compact.uniq.sort.join("\n")
+    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files])[:base]
     params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
     params[:downloader][:name] = params[:downloader][:files].to_s.split(/[\r\n]/).first if params[:downloader][:name].blank?
     params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
@@ -67,7 +67,7 @@ class DownloadersController < ApplicationController
   end
 
   def update
-    params[:downloader][:files] = params[:downloader][:files].to_s.split(/[\r\n]/).collect{|file| File.basename(file)}.compact.uniq.sort.join("\n")
+    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files])[:base]
     params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
     
     logger.debug params.inspect

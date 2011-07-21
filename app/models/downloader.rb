@@ -16,35 +16,33 @@ class Downloader < ActiveRecord::Base
     (self.executable_file and self.executable_file.url) ? SITE_URL + self.executable_file.url : ''
   end
 
-  # Generate a downloader from the tracker if a file isn't provided.
-  def generate_torrent!(target_file_name, piece_size = 256)
-    target_file_name = File.basename(target_file_name, ".torrent")
-    target_file_name += "_" + Time.now.strftime("%Y%m%d_%H%M%S") + ".torrent"
-    target_file_path = File.join('tmp', 'files', target_file_name)
-    # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")
-    
-    
-    logger.debug self.inspect
-    logger.debug target_file_path
-    
-    logger.debug self.files.split(/[\r\n]/)
-    logger.debug self.trackers.split(/[\r\n]/)
-    logger.debug piece_size
-    logger.debug self.comments
-    
+  def self.filter_files(params_files = '')
+    available_files = []
     updated_file_locations = []
-    self.files.split(/[\r\n]/).each do |file|
+    params_files.split(/[\r\n]/).each do |file|
       file_location = File.join(Rails.root, 'tmp', 'symbolic', "source_#{4}", File.basename(file))
-      if File.exists?(file_location)
+      if File.exists?(file_location) and not file.blank?
         updated_file_locations << file_location
-        Rails.logger.debug "#{file_location} ADDED!"
+        available_files << File.basename(file)
+        # Rails.logger.debug "#{file_location} ADDED!"
       else
-        Rails.logger.debug "#{file_location} does NOT exist"
+        # Rails.logger.debug "#{file_location} does NOT exist"
       end
     end
     
-    self.files = self.files.split(/[\r\n]/).collect{|file| File.basename(file)}.join("\n")
-    self.save
+    return {:base => available_files.compact.uniq.sort.join("\n"), :path => updated_file_locations.compact.uniq.sort}
+  end
+
+  # Generate a downloader from the tracker if a file isn't provided.
+  def generate_torrent!(target_file_name, piece_size = 256)
+    updated_file_locations = Downloader.filter_files(self.files)[:path]
+    
+    logger.debug updated_file_locations.inspect
+    
+    target_file_name = File.basename(target_file_name, ".torrent")
+    target_file_name += "_#{updated_file_locations.size}" + Time.now.strftime("_%Y%m%d_%H%M%S") + ".torrent"
+    target_file_path = File.join('tmp', 'files', target_file_name)
+    # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")    
     
     if updated_file_locations.size > 0
       RubyTorrent::Generate.new(target_file_path, updated_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
