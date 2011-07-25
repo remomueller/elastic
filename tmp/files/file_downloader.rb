@@ -109,9 +109,10 @@ EOS
       puts "-" * 78
       ps = bt.peer_info.sort_by { |h| h[:start_time] }.reverse.uniq
       puts <<EOS
-downloaded #{bt.dlamt.k.f}k @ #{bt.dlrate.k.f}kb/s, uploaded #{bt.ulamt.k.f}k @ #{bt.ulrate.k.f}kb/s
-completed: #{bt.pieces_completed} / #{bt.num_pieces} pieces = #{bt.bytes_completed.k.f}kb / #{bt.total_bytes.k.f}kb = #{bt.percent_completed.f}%
-tracker: #{bt.tracker || "not connected"}
+Downloading: #{File.basename(torrent)} | #{index + 1} of #{torrents.size}
+downloaded:  #{bt.dlamt.k.f}k @ #{bt.dlrate.k.f}kb/s, uploaded #{bt.ulamt.k.f}k @ #{bt.ulrate.k.f}kb/s
+completed:   #{bt.pieces_completed} / #{bt.num_pieces} pieces = #{bt.bytes_completed.k.f}kb / #{bt.total_bytes.k.f}kb = #{bt.percent_completed.f}%
+tracker:     #{bt.tracker || "not connected"}
 connected to #{ps.length} / #{bt.num_possible_peers} possible peers:
 EOS
       ps.each do |p|
