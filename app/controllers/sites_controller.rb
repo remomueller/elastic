@@ -19,6 +19,7 @@ class SitesController < ApplicationController
     # puts $tracker.inspect
     # puts $tracker.announce(params).bencode
 
+    params[:info_hash] = params[:info_hash].force_encoding("UTF-8")
     params[:peer_id] = params[:peer_id].force_encoding("UTF-8")
 
     result = $tracker.announce(params).bencode
