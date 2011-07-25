@@ -22,7 +22,7 @@
 
 <p>
   <b>Torrent file:</b>
-  <%= @segment.torrent_file %>
+  <%= link_to File.basename(@segment.torrent_file.path), SITE_URL + @segment.torrent_file.url, :class => 'noicon' if @segment.torrent_file and @segment.torrent_file.url %>
 </p>
 
 <p>

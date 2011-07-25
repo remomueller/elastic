@@ -2,12 +2,12 @@ class Downloader < ActiveRecord::Base
   
   belongs_to :user
   
-  mount_uploader :torrent_file, FileUploader
+  # mount_uploader :torrent_file, FileUploader
   mount_uploader :executable_file, FileUploader
   
-  def torrent_file_url
-    (self.torrent_file and self.torrent_file.url) ? SITE_URL + self.torrent_file.url : ''
-  end
+  # def torrent_file_url
+  #   (self.torrent_file and self.torrent_file.url) ? SITE_URL + self.torrent_file.url : ''
+  # end
   
   def executable_file_url
     (self.executable_file and self.executable_file.url) ? SITE_URL + self.executable_file.url : ''
@@ -34,43 +34,54 @@ class Downloader < ActiveRecord::Base
     return {:base => available_files.compact.uniq.sort.join("\n"), :path => updated_file_locations.compact.uniq.sort}
   end
 
-  # Generate a downloader from the tracker if a file isn't provided.
-  def generate_torrent!(target_file_name, piece_size = 256)
+  def generate_torrents!(target_file_name, piece_size = 256)
     updated_file_locations = Downloader.filter_files(self.files)[:path]
-    
-    logger.debug updated_file_locations.inspect
-    
-    target_file_name = File.basename(target_file_name, ".torrent")
-    target_file_name += "_#{updated_file_locations.size}" + Time.now.strftime("_%Y%m%d_%H%M%S") + ".torrent"
-    target_file_path = File.join('tmp', 'files', target_file_name)
-    # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")
-    
-    if updated_file_locations.size > 0
-      t = Time.now
-      RubyTorrent::Generate.new(target_file_path, updated_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
-      self.update_attribute :torrent_creation_time, (Time.now - t).ceil
-      
-      if File.exists?(target_file_path)
-      
-        self.generate_executable!(target_file_path)
-      
-        target_file = File.new(target_file_path)
-      
-        self.torrent_file = target_file
-        self.save
-        
-        target_file.close
-
-        # begin
-          logger.debug "Deleting #{target_file_path}"
-          File.delete(target_file_path) if File.exists?(target_file_path)
-        # rescue => e
-        #   logger.debug "Exception: #{e.inspect}"
-        # end
-      end
+    updated_file_locations.each do |file_location|
+      segment = Segment.find_or_create_by_files(file_location)
+      segment.update_attributes :trackers => self.trackers, :comments => self.comments      
+      segment.generate_torrent!(file_location, piece_size) if segment.torrent_file.blank?
     end
     
+    self.generate_executable!
   end
+
+  # # Generate a downloader from the tracker if a file isn't provided.
+  # def generate_torrent!(target_file_name, piece_size = 256)
+  #   updated_file_locations = Downloader.filter_files(self.files)[:path]
+  #   
+  #   logger.debug updated_file_locations.inspect
+  #   
+  #   target_file_name = File.basename(target_file_name, ".torrent")
+  #   target_file_name += "_#{updated_file_locations.size}" + Time.now.strftime("_%Y%m%d_%H%M%S") + ".torrent"
+  #   target_file_path = File.join('tmp', 'files', target_file_name)
+  #   # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")
+  #   
+  #   if updated_file_locations.size > 0
+  #     t = Time.now
+  #     RubyTorrent::Generate.new(target_file_path, updated_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
+  #     self.update_attribute :torrent_creation_time, (Time.now - t).ceil
+  #     
+  #     if File.exists?(target_file_path)
+  #     
+  #       self.generate_executable!(target_file_path)
+  #     
+  #       target_file = File.new(target_file_path)
+  #     
+  #       self.torrent_file = target_file
+  #       self.save
+  #       
+  #       target_file.close
+  # 
+  #       # begin
+  #         logger.debug "Deleting #{target_file_path}"
+  #         File.delete(target_file_path) if File.exists?(target_file_path)
+  #       # rescue => e
+  #       #   logger.debug "Exception: #{e.inspect}"
+  #       # end
+  #     end
+  #   end
+  #   
+  # end
   
   
   # `-- <rails_root>
@@ -87,23 +98,18 @@ class Downloader < ActiveRecord::Base
   #         `-- symbolic
   
   
-  def generate_executable!(target_file_path)
+  def generate_executable!
     if ENV['OS'] == "Windows_NT"
       begin
         logger.debug FileUtils.pwd
       
-        # rtpeercursescomplete.rb should be copied next to the torrent file so OCRA correctly adds in the .torrent file.
-      
-        script_file = 'rtpeercursescomplete.rb'
-        script_file_exe = File.basename(script_file, ".rb") + ".exe"
-        script_file_path = File.join(File.dirname(File.dirname(`gem which rubytorrent-allspice`)), script_file)
-      
-        cp_script_file_path = File.join(File.dirname(target_file_path), File.basename(target_file_path, ".torrent") + ".rb")
-        executable_file_path = File.join(File.dirname(cp_script_file_path), File.basename(cp_script_file_path, ".rb") + ".exe")
+        
+        script_file_path = File.join('tmp', 'files', 'file_downloader.rb')
+        executable_file_path = File.join(File.dirname(cp_script_file_path), File.basename(target_file_path, ".rb") + ".exe")
     
-        FileUtils.cp(script_file_path, cp_script_file_path)
+        
     
-        FileUtils.cd(File.dirname(target_file_path))
+        FileUtils.cd('tmp', 'files')
         ocra_cmd = "ocra #{File.basename(cp_script_file_path)} #{File.basename(target_file_path)}"
         logger.debug ocra_cmd
         
@@ -123,22 +129,11 @@ class Downloader < ActiveRecord::Base
         self.save
         exe_file.close
         
-        logger.debug "Deleting #{cp_script_file_path}"
         logger.debug "Deleting #{executable_file_path}"
-        File.delete(cp_script_file_path) if File.exists?(cp_script_file_path)
         File.delete(executable_file_path) if File.exists?(executable_file_path)
       rescue => e
         logger.debug "Exception: #{e.inspect}"
       end
     end
   end
-  
-  # def my_att
-  #   5
-  # end
-  # 
-  # def to_xml
-  #   super(:except => 'id')
-  # end
-
 end
