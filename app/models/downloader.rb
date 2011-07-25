@@ -105,7 +105,7 @@ class Downloader < ActiveRecord::Base
       
         
         script_file_path = File.join('tmp', 'files', 'file_downloader.rb')
-        executable_file_path = File.join(File.dirname(script_file_path), File.basename(target_file_path, ".rb") + ".exe")
+        executable_file_path = File.join(File.dirname(script_file_path), File.basename(script_file_path, ".rb") + ".exe")
     
         
     
