@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 require "net/http"
 require "net/https"
 require "rubytorrent-allspice"
