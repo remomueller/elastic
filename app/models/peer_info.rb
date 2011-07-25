@@ -20,9 +20,10 @@ class PeerInfo < ActiveRecord::Base
   end
   
   def self.find_peers(params)
-    logger.info "FIND PEERS #{params.inspect}"
-    logger.debug "FindPeers: InfoHASH '#{params[:info_hash]}'"
-    logger.debug "FindPeers: InfoHASH '#{params['info_hash']}'"
+    # logger.info "FIND PEERS #{params.inspect}"
+    # logger.debug "FindPeers: InfoHASH '#{params[:info_hash]}'"
+    # logger.debug "FindPeers: InfoHASH '#{params['info_hash']}'"
+    logger.debug "FindPeers Result = #{self.where(:info_hash => params[:info_hash])}.inspect"
     self.where(:info_hash => params[:info_hash])
   end
 end

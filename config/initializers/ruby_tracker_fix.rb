@@ -15,7 +15,7 @@ module Torrent
     _params[:peer_id] = _params[:peer_id].unpack('H*').first
     Rails.logger.debug _params[:peer_id]
     
-    Rails.logger.info "_PARAMS: #{_params.inspect}"
+    Rails.logger.debug "_PARAMS: #{_params.inspect}"
 
     return failure("Torrent not registered") unless torrent_directory.allowed_torrent?(_params)
     
@@ -35,10 +35,16 @@ module Torrent
     #  x.ip
     #end
 
+    
+    result = {}
     if _params[:compact].to_s=="0" then
-      {'peers' => peer_info_class.find_peers(_params).map do |x| x.to_hash end}
+      result = {'peers' => peer_info_class.find_peers(_params).map do |x| x.to_hash end}
     else
-      {'peers' => peer_info_class.find_peers(_params).map do |x| x.pack end.join("").to_s}
-    end 
+      result = {'peers' => peer_info_class.find_peers(_params).map do |x| x.pack end.join("").to_s}
+    end
+    
+    Rails.logger.debug "RubyTracker Result: #{{'peers' => peer_info_class.find_peers(_params)}}"
+    
+    result
   end
 end
