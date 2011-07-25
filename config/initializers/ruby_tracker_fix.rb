@@ -12,7 +12,7 @@ module Torrent
     _params[:info_hash] = _params[:info_hash].unpack('H*').first
     Rails.logger.debug "UNPACKING PEER ID!"
     Rails.logger.debug _params[:peer_id]
-    _params[:peer_id] = _params[:peer_id].unpack('H*').first
+    _params[:peer_id] = _params[:peer_id].unpack('H*').first.encode('UTF-8')
     Rails.logger.debug _params[:peer_id]
     
     Rails.logger.debug "_PARAMS: #{_params.inspect}"
