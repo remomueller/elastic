@@ -18,7 +18,7 @@ class Segment < ActiveRecord::Base
     # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")
     
     t = Time.now
-    RubyTorrent::Generate.new(target_file_path, self.files.split(/[\r\n]/), self.trackers.split(/[\r\n]/), piece_size, self.comments)
+    RubyTorrent::Generate.new(target_file_path, self.files.split(/[\r\n]/), self.trackers.split(/[\r\n]/), piece_size, self.comments.blank? ? 'No comments' : self.comments)
     self.update_attribute :torrent_creation_time, (Time.now - t).ceil
     
     if File.exists?(target_file_path)

@@ -25,6 +25,8 @@ puts tmp_folder
 puts Dir.entries(tmp_folder).inspect
 torrents = Dir.glob(File.join(tmp_folder, "*.torrent"))
 
+dest = ARGV.shift
+
 torrents.each_with_index do |torrent, index|
   puts "Downloading #{File.basename(torrent)} | #{index + 1} of #{torrents.size}"
 
@@ -33,12 +35,13 @@ torrents.each_with_index do |torrent, index|
     puts "File Receipt not found in executable."
     exit
   end
-  dest = ARGV.shift
+
 
   puts "reading torrent..."
   begin
     mi = RubyTorrent::MetaInfo.from_location(torrent, proxy)
   rescue RubyTorrent::MetaInfoFormatError, RubyTorrent::BEncodingError => e
+    puts "Exception: #{e.inspect}"
     die %{Error: can't parse metainfo file "#{torrent}"---maybe not a .torrent?}
   rescue RubyTorrent::TypedStructError => e
     $stderr << <<EOS
