@@ -6,4 +6,39 @@ module Torrent
       end
     end
   end
+  
+  def announce(params)
+    _params = params.clone
+    _params[:info_hash] = _params[:info_hash].unpack('H*').first
+    Rails.logger.debug "UNPACKING PEER ID!"
+    Rails.logger.debug _params[:peer_id]
+    _params[:peer_id] = _params[:peer_id].unpack('H*').first
+    Rails.logger.debug _params[:peer_id]
+    
+    Rails.logger.info "_PARAMS: #{_params.inspect}"
+
+    return failure("Torrent not registered") unless torrent_directory.allowed_torrent?(_params)
+    
+    peer = peer_info_class.get_or_create(_params)
+
+    case _params[:event]
+    when 'stopped'
+      peer.stop _params
+    when 'completed'
+      peer.complete _params
+    when 'started'
+      peer.start _params
+    end
+    raise "Error updating peer data" unless peer.save
+   
+    #peers = peer_info_class.find_peers(_params).map do |x|
+    #  x.ip
+    #end
+
+    if _params[:compact].to_s=="0" then
+      {'peers' => peer_info_class.find_peers(_params).map do |x| x.to_hash end}
+    else
+      {'peers' => peer_info_class.find_peers(_params).map do |x| x.pack end.join("").to_s}
+    end 
+  end
 end
