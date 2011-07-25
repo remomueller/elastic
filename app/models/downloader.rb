@@ -110,7 +110,14 @@ class Downloader < ActiveRecord::Base
         
     
         FileUtils.cd('tmp', 'files')
-        ocra_cmd = "ocra #{File.basename(cp_script_file_path)} #{File.basename(target_file_path)}"
+        
+        segment_files = []
+        self.files.each do |file|
+          segment_files << File.basename(file) + ".torrent"
+        end
+        
+        
+        ocra_cmd = "ocra #{File.basename(cp_script_file_path)} #{segment_files.join(' ')}"
         logger.debug ocra_cmd
         
         t = Time.now
