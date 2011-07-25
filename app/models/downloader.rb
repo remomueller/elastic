@@ -90,7 +90,7 @@ class Downloader < ActiveRecord::Base
   #         |-- cache
   #         |-- files
   #         |   |-- executable_file_path (.exe)   ex:   my_files.exe      <= The compiled script (contains both .rb and .torrent)
-  #         |   |-- cp_script_file_path (.rb)     ex:   my_files.rb       <= The ruby script that downloads the torrent
+  #         |   |-- script_file_path (.rb)        ex:   my_files.rb       <= The ruby script that downloads the torrent
   #         |   `-- target_file_path (.torrent)   ex:   my_files.torrent  <= The actual torrent
   #         |-- pids
   #         |-- sessions
@@ -105,7 +105,7 @@ class Downloader < ActiveRecord::Base
       
         
         script_file_path = File.join('tmp', 'files', 'file_downloader.rb')
-        executable_file_path = File.join(File.dirname(cp_script_file_path), File.basename(target_file_path, ".rb") + ".exe")
+        executable_file_path = File.join(File.dirname(script_file_path), File.basename(target_file_path, ".rb") + ".exe")
     
         
     
@@ -117,7 +117,7 @@ class Downloader < ActiveRecord::Base
         end
         
         
-        ocra_cmd = "ocra #{File.basename(cp_script_file_path)} #{segment_files.join(' ')}"
+        ocra_cmd = "ocra #{File.basename(script_file_path)} #{segment_files.join(' ')}"
         logger.debug ocra_cmd
         
         t = Time.now
