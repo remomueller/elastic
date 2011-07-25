@@ -19,8 +19,8 @@ class SitesController < ApplicationController
     # puts $tracker.inspect
     # puts $tracker.announce(params).bencode
 
-    params[:info_hash] = params[:info_hash].force_encoding("UTF-8")
-    params[:peer_id] = params[:peer_id].force_encoding("UTF-8")
+    params[:info_hash] = params[:info_hash].encode("UTF-8")
+    params[:peer_id] = params[:peer_id].encode("UTF-8")
 
     result = $tracker.announce(params).bencode
     logger.debug "PEER_INFO_CLASS: FIND_PEERS: #{$tracker.peer_info_class.find_peers(params)}"
