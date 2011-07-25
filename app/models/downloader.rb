@@ -43,7 +43,7 @@ class Downloader < ActiveRecord::Base
     target_file_name = File.basename(target_file_name, ".torrent")
     target_file_name += "_#{updated_file_locations.size}" + Time.now.strftime("_%Y%m%d_%H%M%S") + ".torrent"
     target_file_path = File.join('tmp', 'files', target_file_name)
-    # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")    
+    # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")
     
     if updated_file_locations.size > 0
       t = Time.now
