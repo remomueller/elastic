@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @segment.user_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @segment.name %>
+</p>
+
+<p>
+  <b>Files:</b>
+  <%= @segment.files %>
+</p>
+
+<p>
+  <b>Trackers:</b>
+  <%= @segment.trackers %>
+</p>
+
+<p>
+  <b>Torrent file:</b>
+  <%= @segment.torrent_file %>
+</p>
+
+<p>
+  <b>Comments:</b>
+  <%= @segment.comments %>
+</p>
+
+<p>
+  <b>Torrent creation time:</b>
+  <%= @segment.torrent_creation_time %>
+</p>
+
+
+<%= link_to 'Edit', edit_segment_path(@segment) %> |
+<%= link_to 'Back', segments_path %>

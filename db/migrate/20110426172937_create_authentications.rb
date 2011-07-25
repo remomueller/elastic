@@ -1,5 +1,5 @@
 class CreateAuthentications < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :authentications do |t|
       t.integer :user_id
       t.string :provider
@@ -7,9 +7,5 @@ class CreateAuthentications < ActiveRecord::Migration
       
       t.timestamps
     end
-  end
-
-  def self.down
-    drop_table :authentications
   end
 end

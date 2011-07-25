@@ -1,5 +1,5 @@
 class CreateTorrents < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :torrents do |t|
       t.integer :user_id
       t.string :name
@@ -12,9 +12,5 @@ class CreateTorrents < ActiveRecord::Migration
 
       t.timestamps
     end
-  end
-
-  def self.down
-    drop_table :torrents
   end
 end

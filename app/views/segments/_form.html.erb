@@ -1,0 +1,45 @@
+<%= form_for(@segment) do |f| %>
+  <% if @segment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@segment.errors.count, "error") %> prohibited this segment from being saved:</h2>
+
+      <ul>
+      <% @segment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :user_id %><br />
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :files %><br />
+    <%= f.text_area :files %>
+  </div>
+  <div class="field">
+    <%= f.label :trackers %><br />
+    <%= f.text_area :trackers %>
+  </div>
+  <div class="field">
+    <%= f.label :torrent_file %><br />
+    <%= f.text_field :torrent_file %>
+  </div>
+  <div class="field">
+    <%= f.label :comments %><br />
+    <%= f.text_area :comments %>
+  </div>
+  <div class="field">
+    <%= f.label :torrent_creation_time %><br />
+    <%= f.number_field :torrent_creation_time %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,5 +1,7 @@
 Elastic::Application.routes.draw do
 
+  resources :segments
+
   match "/announce" => "sites#announce", :as => :announce
   match "/scrape" => "sites#scrape", :as => :scrape
 
@@ -10,8 +12,6 @@ Elastic::Application.routes.draw do
   resources :authentications
 
   resources :downloaders
-
-  resources :slice
 
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path_names => { :sign_up => 'register', :sign_in => 'login' }
 

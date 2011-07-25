@@ -1,5 +1,5 @@
 class CreatePeerInfos < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :peer_infos do |t|
       t.string :info_hash
       t.string :peer_id
@@ -12,9 +12,5 @@ class CreatePeerInfos < ActiveRecord::Migration
 
       t.timestamps
     end
-  end
-
-  def self.down
-    drop_table :peer_infos
   end
 end
