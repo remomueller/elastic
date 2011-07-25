@@ -22,18 +22,20 @@ class SitesController < ApplicationController
     params[:peer_id] = params[:peer_id].force_encoding("UTF-8")
 
     result = $tracker.announce(params).bencode
-    # puts $tracker.peer_info_class.find_peers(params)
+    logger.debug "PEER_INFO_CLASS: FIND_PEERS: #{$tracker.peer_info_class.find_peers(params)}"
 
     # logger.debug "RESULT: #{$tracker.announce(params)}"
+
+    logger.debug "RESULT: #{result.inspect}"
 
     render :text => result
     # render :text => @tracker.announce(params).to_bencoding
   end
   
-  def scrape
-    
-    render :text => $tracker.scrape(params[:info_hash]).bencode
-    
-  end
+  # def scrape
+  #   
+  #   render :text => $tracker.scrape(params[:info_hash]).bencode
+  #   
+  # end
   
 end
