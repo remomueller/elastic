@@ -16,8 +16,8 @@ class PeerInfo < ActiveRecord::Base
   def self.get_peer(params)
     logger.info "GET PEER #{params.inspect}"
     # self.first(:peer_id => params[:peer_id], :info_hash => params[:info_hash])
-    params['peer_id'] = params['peer_id'].force_encoding('UTF-8')
-    params['info_hash'] = params['info_hash'].force_encoding('UTF-8')
+    # params['peer_id'] = params['peer_id'].force_encoding('UTF-8')
+    # params['info_hash'] = params['info_hash'].force_encoding('UTF-8')
     self.find_by_peer_id_and_info_hash(params['peer_id'], params['info_hash'])
   end
   
