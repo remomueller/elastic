@@ -24,6 +24,7 @@ class PeerInfo < ActiveRecord::Base
     # logger.debug "FindPeers: InfoHASH '#{params[:info_hash]}'"
     # logger.debug "FindPeers: InfoHASH '#{params['info_hash']}'"
     logger.debug "FindPeers Result = #{self.where(:info_hash => params[:info_hash])}.inspect"
-    self.where(:info_hash => params[:info_hash])
+    # self.where(:info_hash => params[:info_hash])
+    self.all.select{|p| p.info_hash == params[:info_hash]}
   end
 end
