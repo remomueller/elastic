@@ -33,10 +33,10 @@ class SitesController < ApplicationController
     # render :text => @tracker.announce(params).to_bencoding
   end
   
-  # def scrape
-  #   
-  #   render :text => $tracker.scrape(params[:info_hash]).bencode
-  #   
-  # end
+  def scrape
+    
+    render :text => $tracker.scrape(params[:info_hash]).bencode
+    
+  end
   
 end
