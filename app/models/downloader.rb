@@ -109,7 +109,7 @@ class Downloader < ActiveRecord::Base
     
         
     
-        FileUtils.cd('tmp', 'files')
+        FileUtils.cd(File.join('tmp', 'files'))
         
         segment_files = []
         self.files.split(/[\r\n]/).each do |file|
