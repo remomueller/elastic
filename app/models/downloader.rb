@@ -100,7 +100,7 @@ class Downloader < ActiveRecord::Base
   
   def generate_executable!
     if ENV['OS'] == "Windows_NT"
-      begin
+      # begin
         logger.debug FileUtils.pwd
       
         
@@ -112,7 +112,7 @@ class Downloader < ActiveRecord::Base
         FileUtils.cd('tmp', 'files')
         
         segment_files = []
-        self.files.each do |file|
+        self.files.split(/[\r\n]/).each do |file|
           segment_files << File.basename(file) + ".torrent"
         end
         
@@ -138,9 +138,9 @@ class Downloader < ActiveRecord::Base
         
         logger.debug "Deleting #{executable_file_path}"
         File.delete(executable_file_path) if File.exists?(executable_file_path)
-      rescue => e
-        logger.debug "Exception: #{e.inspect}"
-      end
+      # rescue => e
+      #   logger.debug "Exception: #{e.inspect}"
+      # end
     end
   end
 end
