@@ -112,8 +112,6 @@ class Downloader < ActiveRecord::Base
         script_file_path = File.join('tmp', 'files', "simple_download_#{self.id}.rb")
         file_template = File.join('lib', 'templates', 'simple_download.rb.erb')
         
-        @downloader = self
-        
         file_in = File.new(file_template, "r")
         file_out = File.new(script_file_path, "w")
         template = ERB.new(file_in.sysread(File.size(file_in)))

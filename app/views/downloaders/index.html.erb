@@ -9,6 +9,7 @@
     <th>Info hash</th>
     <th>Torrent file</th>
     <th>Executable file</th>
+    <th>Simple Executable file</th>
     <th>Comments</th>
     <th></th>
     <th></th>
@@ -24,6 +25,7 @@
     <td><%= downloader.info_hash %></td>
     <td><%= link_to File.basename(downloader.torrent_file.path), SITE_URL + downloader.torrent_file.url, :class => 'noicon' if downloader.torrent_file and downloader.torrent_file.url %></td>
     <td><%= link_to File.basename(downloader.executable_file.path), SITE_URL + downloader.executable_file.url, :class => 'noicon' if downloader.executable_file and downloader.executable_file.url %></td>
+    <td><%= link_to File.basename(downloader.simple_executable_file.path), SITE_URL + downloader.simple_executable_file.url, :class => 'noicon' if downloader.simple_executable_file and downloader.simple_executable_file.url %></td>
     <td><%= downloader.comments %></td>
     <td><%= link_to 'Show', downloader %></td>
     <td><%= link_to 'Edit', edit_downloader_path(downloader) %></td>
