@@ -5,8 +5,7 @@ exit if defined?(Ocra)
 
 # file_locations = ['/downloaders/1/download_file?file_path=abc.txt&download_token=7e9c36efee12b62c4bfa73da0fd1d34b1a47b8d0', '/downloaders/1/download_file?file_path=sample.txt&download_token=7e9c36efee12b62c4bfa73da0fd1d34b1a47b8d0']
 
-file_locations
-
+file_locations = [<%= self.files.split(/[\r\n]/).collect{|file| "'/downloaders/#{self.id}/download_file?file_path=#{file}&download_token=#{self.download_token}'"}.join(',') %>]
 
 def checksum(file_name)
   md5_checksum = ''
@@ -33,7 +32,7 @@ file_locations.each_with_index do |file_location, index|
   
   puts "\nProcessing File #{file_name} | #{index + 1} of #{file_locations.size}"
   error = ''
-  url = URI.parse("http://elastic.rails.local" + file_location)
+  url = URI.parse("<%= SITE_URL %>" + file_location)
   
   https = Net::HTTP.new(url.host, url.port)
   

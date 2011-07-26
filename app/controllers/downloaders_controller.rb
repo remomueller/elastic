@@ -79,10 +79,10 @@ class DownloadersController < ApplicationController
     else
     
       @downloader = current_user.downloaders.new(params[:downloader])
-      @downloader.generate_torrents!(params[:target_file_name])
 
       respond_to do |format|
         if @downloader.save
+          @downloader.generate_torrents!(params[:target_file_name])
           format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
           format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]), :status => :created, :location => @downloader }
         else
@@ -104,7 +104,7 @@ class DownloadersController < ApplicationController
     
     respond_to do |format|
       if @downloader.update_attributes(params[:downloader])
-        @downloader.generate_torrents!(params[:target_file_name]) unless params[:target_file_name].blank? # or same_files
+        @downloader.generate_torrents!(params[:target_file_name]) unless same_files
         format.html { redirect_to(@downloader, :notice => 'Downloader was successfully updated.') }
         format.xml  { head :ok }
       else

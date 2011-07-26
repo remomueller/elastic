@@ -47,7 +47,7 @@ class Downloader < ActiveRecord::Base
       segment.generate_torrent!(file_location, piece_size) if segment.torrent_file.blank?
     end
     
-    self.generate_executable!
+    # self.generate_executable!
     self.generate_simple_executable!
   end
 
@@ -107,17 +107,17 @@ class Downloader < ActiveRecord::Base
   def generate_simple_executable!
     
     
-    if ENV['OS'] == "Windows_NT"
+    if ENV['OS'] == "Windows_NT" or true
       # begin
         script_file_path = File.join('tmp', 'files', "simple_download_#{self.id}.rb")
-        
-        file_template = File.join(template_folder, file_name + '.erb')
         file_template = File.join('lib', 'templates', 'simple_download.rb.erb')
-      
+        
+        @downloader = self
+        
         file_in = File.new(file_template, "r")
         file_out = File.new(script_file_path, "w")
         template = ERB.new(file_in.sysread(File.size(file_in)))
-        file_out.syswrite(template.result)
+        file_out.syswrite(template.result(binding))
         file_in.close()
         file_out.close()
       
@@ -139,13 +139,16 @@ class Downloader < ActiveRecord::Base
         
         FileUtils.cd(Rails.root)
         
-        exe_file = File.new(executable_file_path)
-        self.simple_executable_file = exe_file
-        self.save
-        exe_file.close
-        
+        if File.exists?(executable_file_path)
+          exe_file = File.new(executable_file_path)
+          self.simple_executable_file = exe_file
+          self.save
+          exe_file.close
+        end
+
         logger.debug "Deleting #{executable_file_path}"
         File.delete(executable_file_path) if File.exists?(executable_file_path)
+        logger.debug "Deleting #{script_file_path}"
         File.delete(script_file_path) if File.exists?(script_file_path)
       # rescue => e
       #   logger.debug "Exception: #{e.inspect}"
