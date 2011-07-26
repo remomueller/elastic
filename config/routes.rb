@@ -11,7 +11,11 @@ Elastic::Application.routes.draw do
 
   resources :authentications
 
-  resources :downloaders
+  resources :downloaders do
+    member do
+      get :download_file
+    end
+  end
 
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path_names => { :sign_up => 'register', :sign_in => 'login' }
 

@@ -7,7 +7,6 @@ class Segment < ActiveRecord::Base
     (self.torrent_file and self.torrent_file.url) ? SITE_URL + self.torrent_file.url : ''
   end
   
-  
   # Generate a downloader from the tracker if a file isn't provided.
   def generate_torrent!(target_file_name, piece_size = 256)
     
@@ -20,6 +19,23 @@ class Segment < ActiveRecord::Base
     t = Time.now
     RubyTorrent::Generate.new(target_file_path, self.files.split(/[\r\n]/), self.trackers.split(/[\r\n]/), piece_size, self.comments.blank? ? 'No comments' : self.comments)
     self.update_attribute :torrent_creation_time, (Time.now - t).ceil
+    
+    begin
+      file_name = self.files.split(/[\r\n]/).first
+      f = File.new(file_name)
+      begin
+        md5_checksum = Digest::MD5.hexdigest(f.read)
+      rescue NoMemoryError => e
+        logger.debug "\n[NOMEMORY] Failed to Allocate Memory: File Size #{f.size}"
+      end
+      self.update_attribute :checksum, md5_checksum
+    rescue => e
+      logger.debug "Error #{e.inspect}"
+    ensure
+      f.close if f and not f.closed?
+      f = nil
+    end
+    
     
     if File.exists?(target_file_path)
     

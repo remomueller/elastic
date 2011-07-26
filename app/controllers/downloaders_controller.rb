@@ -1,6 +1,33 @@
 class DownloadersController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :check_system_admin
+  before_filter :authenticate_user!, :except => ['download_file']
+  before_filter :check_system_admin, :except => ['download_file']
+  
+  def download_file
+    @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
+    if @downloader and @downloader.files.to_s.split(/[\r\n]/).include?(params[:file_path])
+      file_path = File.join('tmp', 'symbolic', 'source_4', params[:file_path])
+      if File.exists?(file_path)
+        if params[:checksum] == '1'
+          segment = Segment.find_by_files(File.join(Rails.root, file_path))
+          if segment
+            render :text => segment.checksum
+          else
+            render :text => 'NOTHING'
+          end
+        else
+          send_file file_path, :disposition =>'attachment'
+        end
+      else
+        error = "The file is no longer available"
+        logger.debug error
+        render :text => error, :status => 404, :layout => false
+      end
+    else
+      error = "No longer authorized to download this file"
+      logger.debug error
+      render :text => error, :status => 404
+    end
+  end
   
   def index
     @downloaders = Downloader.all
@@ -16,7 +43,7 @@ class DownloadersController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count], :except => [:torrent_file, :executable_file]) }
+      format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]) }
     end
   end
 
@@ -40,14 +67,14 @@ class DownloadersController < ApplicationController
     params[:downloader][:name] = params[:downloader][:files].to_s.split(/[\r\n]/).first if params[:downloader][:name].blank?
     params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
     
-    logger.debug params.inspect
+    params[:downloader][:download_token] = Digest::SHA1.hexdigest(Time.now.usec.to_s)
     
     @downloader = current_user.downloaders.find_by_files(params[:downloader][:files])
     
     if @downloader
       respond_to do |format|
         format.html { redirect_to(@downloader, :notice => 'Equivalent downloader retrieved.') }
-        format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count], :except => [:torrent_file, :executable_file]) }
+        format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]) }
       end
     else
     
@@ -57,7 +84,7 @@ class DownloadersController < ApplicationController
       respond_to do |format|
         if @downloader.save
           format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
-          format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count], :except => [:torrent_file, :executable_file]), :status => :created, :location => @downloader }
+          format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]), :status => :created, :location => @downloader }
         else
           format.html { render :action => "new" }
           format.xml  { render :xml => @downloader.errors, :status => :unprocessable_entity }

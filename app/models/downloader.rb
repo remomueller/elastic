@@ -4,6 +4,7 @@ class Downloader < ActiveRecord::Base
   
   # mount_uploader :torrent_file, FileUploader
   mount_uploader :executable_file, FileUploader
+  mount_uploader :simple_executable_file, FileUploader
   
   # def torrent_file_url
   #   (self.torrent_file and self.torrent_file.url) ? SITE_URL + self.torrent_file.url : ''
@@ -11,6 +12,10 @@ class Downloader < ActiveRecord::Base
   
   def executable_file_url
     (self.executable_file and self.executable_file.url) ? SITE_URL + self.executable_file.url : ''
+  end
+  
+  def simple_executable_file_url
+    (self.simple_executable_file and self.simple_executable_file.url) ? SITE_URL + self.simple_executable_file.url : ''
   end
   
   def file_count
@@ -43,6 +48,7 @@ class Downloader < ActiveRecord::Base
     end
     
     self.generate_executable!
+    self.generate_simple_executable!
   end
 
   # # Generate a downloader from the tracker if a file isn't provided.
@@ -96,6 +102,59 @@ class Downloader < ActiveRecord::Base
   #         |-- sessions
   #         |-- sockets
   #         `-- symbolic
+  
+  
+  def generate_simple_executable!
+    
+    
+    if ENV['OS'] == "Windows_NT"
+      # begin
+        script_file_path = File.join('tmp', 'files', "simple_download_#{self.id}.rb")
+        
+        file_template = File.join(template_folder, file_name + '.erb')
+        file_template = File.join('lib', 'templates', 'simple_download.rb.erb')
+      
+        file_in = File.new(file_template, "r")
+        file_out = File.new(script_file_path, "w")
+        template = ERB.new(file_in.sysread(File.size(file_in)))
+        file_out.syswrite(template.result)
+        file_in.close()
+        file_out.close()
+      
+        executable_file_path = File.join(File.dirname(script_file_path), File.basename(script_file_path, ".rb") + ".exe")
+    
+        FileUtils.cd(File.join('tmp', 'files'))
+        
+        ocra_cmd = "ocra #{File.basename(script_file_path)}"
+        logger.debug ocra_cmd
+        
+        t = Time.now
+        logger.debug "Waiting on ocra..."
+        status, stdout, stderr = 
+          systemu ocra_cmd do |cid|
+            logger.debug "   #{Time.now - t}"
+            sleep 1
+          end
+        logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
+        
+        FileUtils.cd(Rails.root)
+        
+        exe_file = File.new(executable_file_path)
+        self.simple_executable_file = exe_file
+        self.save
+        exe_file.close
+        
+        logger.debug "Deleting #{executable_file_path}"
+        File.delete(executable_file_path) if File.exists?(executable_file_path)
+        File.delete(script_file_path) if File.exists?(script_file_path)
+      # rescue => e
+      #   logger.debug "Exception: #{e.inspect}"
+      # end
+    end
+    
+    
+    
+  end
   
   
   def generate_executable!
