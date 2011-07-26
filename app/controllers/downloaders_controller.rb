@@ -3,8 +3,10 @@ class DownloadersController < ApplicationController
   before_filter :check_system_admin, :except => ['download_file']
   
   def download_file
-    @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
-    if @downloader and @downloader.files.to_s.split(/[\r\n]/).include?(params[:file_path])
+    # Not working in sqlite for some reason...
+    # @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
+    @downloader = Downloader.find_by_id(params[:id])
+    if @downloader and @downloader.download_token == params[:download_token] and @downloader.files.to_s.split(/[\r\n]/).include?(params[:file_path])
       file_path = File.join('tmp', 'symbolic', 'source_4', params[:file_path])
       if File.exists?(file_path)
         if params[:checksum] == '1'
