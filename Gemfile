@@ -3,7 +3,9 @@ source 'http://rubygems.org'
 gem 'rails', '3.1.0.rc4'
 
 # Database Adapter
-gem 'mysql2', '0.3.2'
+gem 'mysql2', '0.3.2',          :platforms => [:ruby]
+gem 'sqlite3',                  :platforms => [:mswin, :mingw]
+gem 'mongrel', '>= 1.2.0.pre2', :platforms => [:mswin, :mingw]
 
 # Gems used by project
 gem 'carrierwave'                  # File Uploads
