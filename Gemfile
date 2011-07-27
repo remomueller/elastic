@@ -32,6 +32,6 @@ gem 'sprockets', '= 2.0.0.beta.10' # Newer versions of sprockets appear to cause
 # Testing
 group :test do
   # Pretty printed test output
-  gem 'win32console', :platforms => [:mingw]
+  gem 'win32console', :platforms => [:mswin, :mingw]
   gem 'turn'
 end
