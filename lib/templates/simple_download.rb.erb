@@ -30,6 +30,7 @@ end
 file_locations.each_with_index do |file_location, index|
   file_done = false
   file_name = file_location.scan(/file_path=(.*?)&/).flatten.first
+  folder_name = 'simple_download'
   
   puts "\nProcessing File #{file_name} | #{index + 1} of #{file_locations.size}"
   error = ''
@@ -43,13 +44,14 @@ file_locations.each_with_index do |file_location, index|
   end
 
   begin
-    if File.exists?(file_name)
+    if File.exists?(File.join(folder_name, file_name))
       puts "  ...checking for completeness"
       resp, data = https.get2(file_location + "&checksum=1")
       case resp when Net::HTTPSuccess
-        puts "    #{checksum(file_name)} [LOCAL  CHECKSUM]"
+        calculated_checksum = checksum(File.join(folder_name, file_name))
+        puts "    #{calculated_checksum} [LOCAL  CHECKSUM]"
         puts "    #{resp.body} [REMOTE CHECKSUM]"
-        if resp.body == checksum(file_name)
+        if resp.body == calculated_checksum
           file_done = true
           puts "  ...already downloaded.   [SKIPPED]"
         else
@@ -57,14 +59,14 @@ file_locations.each_with_index do |file_location, index|
         end
       else
         error = "Error: #{data}"
-      end      
+      end
     end
       
     unless file_done
       puts "  ...downloading #{File.basename(file_name)}"
       resp, data = https.get2(file_location)
       case resp when Net::HTTPSuccess
-        open(File.basename(file_name), "wb"){ |file| file.write(resp.body) }
+        open(File.join(folder_name, File.basename(file_name)), "wb"){ |file| file.write(resp.body) }
         puts "  ...download complete.    [COMPLETED]"
       else
         error = "Error: #{data}"
