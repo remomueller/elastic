@@ -49,8 +49,8 @@ file_locations.each_with_index do |file_location, index|
       resp, data = https.get2(file_location + "&checksum=1")
       case resp when Net::HTTPSuccess
         calculated_checksum = checksum(File.join(folder_name, file_name))
-        puts "    #{calculated_checksum} [LOCAL  CHECKSUM]"
-        puts "    #{resp.body} [REMOTE CHECKSUM]"
+        puts "     #{calculated_checksum} [LOCAL  CHECKSUM]"
+        puts "     #{resp.body} [REMOTE CHECKSUM]"
         if resp.body == calculated_checksum
           file_done = true
           puts "  ...already downloaded.   [SKIPPED]"
