@@ -1,7 +1,6 @@
 class DownloadersController < ApplicationController
   before_filter :authenticate_user!, :except => ['download_file']
   before_filter :check_system_admin, :except => ['download_file']
-  skip_before_filter :verify_authenticity_token, :only => ['create']
   
   def download_file
     # Not working in sqlite for some reason...
