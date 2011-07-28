@@ -20,6 +20,22 @@ class Segment < ActiveRecord::Base
     RubyTorrent::Generate.new(target_file_path, self.files.split(/[\r\n]/), self.trackers.split(/[\r\n]/), piece_size, self.comments.blank? ? 'No comments' : self.comments)
     self.update_attribute :torrent_creation_time, (Time.now - t).ceil
     
+    if File.exists?(target_file_path)
+    
+      target_file = File.new(target_file_path)
+    
+      self.torrent_file = target_file
+      self.save
+      
+      target_file.close
+    
+      # logger.debug "Deleting #{target_file_path}"
+      # File.delete(target_file_path) if File.exists?(target_file_path)
+    end
+    
+  end
+  
+  def generate_checksum!
     begin
       file_name = self.files.split(/[\r\n]/).first
       f = File.new(file_name)
@@ -35,21 +51,6 @@ class Segment < ActiveRecord::Base
       f.close if f and not f.closed?
       f = nil
     end
-    
-    
-    if File.exists?(target_file_path)
-    
-      target_file = File.new(target_file_path)
-    
-      self.torrent_file = target_file
-      self.save
-      
-      target_file.close
-    
-      # logger.debug "Deleting #{target_file_path}"
-      # File.delete(target_file_path) if File.exists?(target_file_path)
-    end
-    
   end
   
 end

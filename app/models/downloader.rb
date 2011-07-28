@@ -40,6 +40,8 @@ class Downloader < ActiveRecord::Base
   end
 
   def generate_torrents!(target_file_name, piece_size = 256)
+    self.generate_checksums!
+    
     updated_file_locations = Downloader.filter_files(self.files)[:path]
     updated_file_locations.each do |file_location|
       segment = Segment.find_or_create_by_files(file_location)
@@ -47,48 +49,16 @@ class Downloader < ActiveRecord::Base
       segment.generate_torrent!(file_location, piece_size) if segment.torrent_file.blank?
     end
     
-    # self.generate_executable!
-    self.generate_simple_executable!
+    self.generate_executable!
   end
-
-  # # Generate a downloader from the tracker if a file isn't provided.
-  # def generate_torrent!(target_file_name, piece_size = 256)
-  #   updated_file_locations = Downloader.filter_files(self.files)[:path]
-  #   
-  #   logger.debug updated_file_locations.inspect
-  #   
-  #   target_file_name = File.basename(target_file_name, ".torrent")
-  #   target_file_name += "_#{updated_file_locations.size}" + Time.now.strftime("_%Y%m%d_%H%M%S") + ".torrent"
-  #   target_file_path = File.join('tmp', 'files', target_file_name)
-  #   # executable_file_name = File.join('tmp', 'files', File.basename(target_file_name, ".torrent") + ".exe")
-  #   
-  #   if updated_file_locations.size > 0
-  #     t = Time.now
-  #     RubyTorrent::Generate.new(target_file_path, updated_file_locations, self.trackers.split(/[\r\n]/), piece_size, self.comments)
-  #     self.update_attribute :torrent_creation_time, (Time.now - t).ceil
-  #     
-  #     if File.exists?(target_file_path)
-  #     
-  #       self.generate_executable!(target_file_path)
-  #     
-  #       target_file = File.new(target_file_path)
-  #     
-  #       self.torrent_file = target_file
-  #       self.save
-  #       
-  #       target_file.close
-  # 
-  #       # begin
-  #         logger.debug "Deleting #{target_file_path}"
-  #         File.delete(target_file_path) if File.exists?(target_file_path)
-  #       # rescue => e
-  #       #   logger.debug "Exception: #{e.inspect}"
-  #       # end
-  #     end
-  #   end
-  #   
-  # end
   
+  def generate_checksums!
+    updated_file_locations = Downloader.filter_files(self.files)[:path]
+    updated_file_locations.each do |file_location|
+      segment = Segment.find_or_create_by_files(file_location)
+      segment.generate_checksum!
+    end
+  end
   
   # `-- <rails_root>
   #     |-- ...
@@ -105,7 +75,7 @@ class Downloader < ActiveRecord::Base
   
   
   def generate_simple_executable!
-    
+    self.generate_checksums!
     
     if ENV['OS'] == "Windows_NT" or true
       # begin
