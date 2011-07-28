@@ -26,11 +26,11 @@ def checksum(file_name)
   md5_checksum
 end
 
-
 file_locations.each_with_index do |file_location, index|
   file_done = false
   file_name = file_location.scan(/file_path=(.*?)&/).flatten.first
   folder_name = 'simple_download'
+  Dir.mkdir(folder_name) unless Dir.exists?(folder_name)
   
   puts "\nProcessing File #{file_name} | #{index + 1} of #{file_locations.size}"
   error = ''
