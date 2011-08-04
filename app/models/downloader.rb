@@ -55,6 +55,7 @@ class Downloader < ActiveRecord::Base
   def generate_checksums!
     updated_file_locations = Downloader.filter_files(self.files)[:path]
     updated_file_locations.each do |file_location|
+      logger.debug "Searching for: #{file_location}"
       segment = Segment.find_or_create_by_files(file_location)
       segment.generate_checksum! if segment.checksum.blank?
     end
