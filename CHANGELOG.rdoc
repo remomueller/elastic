@@ -11,7 +11,8 @@
 == 0.2.0
 
 * Enhancements
-  *
+  * Switch to file serving via ruby script
+  * Allow multiple locations for stored files, downloaders now require a folder location
 
 == 0.1.0
 

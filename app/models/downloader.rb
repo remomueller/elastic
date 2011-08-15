@@ -22,11 +22,11 @@ class Downloader < ActiveRecord::Base
     self.files.to_s.split(/[\r\n]/).select{|i| not i.blank?}.size
   end
 
-  def self.filter_files(params_files = '')
+  def self.filter_files(params_files = '', params_folder = '')
     available_files = []
     updated_file_locations = []
     params_files.split(/[\r\n]/).each do |file|
-      file_location = File.join(Rails.root, 'tmp', 'symbolic', "source_#{4}", File.basename(file))
+      file_location = File.join(Rails.root, 'tmp', 'symbolic', params_folder, File.basename(file))
       if File.exists?(file_location) and not file.blank?
         updated_file_locations << file_location
         available_files << File.basename(file)

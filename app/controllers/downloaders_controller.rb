@@ -7,7 +7,7 @@ class DownloadersController < ApplicationController
     # @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
     @downloader = Downloader.find_by_id(params[:id])
     if @downloader and @downloader.download_token == params[:download_token] and @downloader.files.to_s.split(/[\r\n]/).include?(params[:file_path])
-      file_path = File.join('tmp', 'symbolic', 'source_4', params[:file_path])
+      file_path = File.join('tmp', 'symbolic', @downloader.folder, params[:file_path])
       if File.exists?(file_path)
         if params[:checksum] == '1'
           segment = Segment.find_by_files(File.join(Rails.root, file_path))
@@ -64,7 +64,7 @@ class DownloadersController < ApplicationController
   end
 
   def create
-    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files])[:base]
+    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
     params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
     params[:downloader][:name] = params[:downloader][:files].to_s.split(/[\r\n]/).first if params[:downloader][:name].blank?
     params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
