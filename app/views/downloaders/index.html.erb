@@ -20,7 +20,7 @@
   <tr>
     <td><%= downloader.user_id %></td>
     <td><%= link_to downloader.name, downloader %></td>
-    <td><%= downloader.files %></td>
+    <td><%= downloader.file_count %></td>
     <td><%= downloader.trackers %></td>
     <td><%= downloader.info_hash %></td>
     <td><%= link_to File.basename(downloader.torrent_file.path), SITE_URL + downloader.torrent_file.url, :class => 'noicon' if downloader.torrent_file and downloader.torrent_file.url %></td>
