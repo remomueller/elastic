@@ -42,7 +42,7 @@ class Downloader < ActiveRecord::Base
   def generate_torrents!(target_file_name, piece_size = 256)
     self.generate_checksums!
     
-    updated_file_locations = Downloader.filter_files(self.files)[:path]
+    updated_file_locations = Downloader.filter_files(self.files, self.folder)[:path]
     updated_file_locations.each do |file_location|
       segment = Segment.find_or_create_by_files(file_location)
       segment.update_attributes :trackers => self.trackers, :comments => self.comments      
@@ -53,7 +53,7 @@ class Downloader < ActiveRecord::Base
   end
   
   def generate_checksums!
-    updated_file_locations = Downloader.filter_files(self.files)[:path]
+    updated_file_locations = Downloader.filter_files(self.files, self.folder)[:path]
     updated_file_locations.each do |file_location|
       logger.debug "Searching for: #{file_location}"
       segment = Segment.find_or_create_by_files(file_location)

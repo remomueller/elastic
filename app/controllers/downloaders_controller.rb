@@ -71,7 +71,7 @@ class DownloadersController < ApplicationController
     
     params[:downloader][:download_token] = Digest::SHA1.hexdigest(Time.now.usec.to_s)
     
-    @downloader = current_user.downloaders.find_by_files(params[:downloader][:files])
+    @downloader = current_user.downloaders.find_by_files_and_folder(params[:downloader][:files], params[:downloader][:folder])
     
     if @downloader
       respond_to do |format|
@@ -97,13 +97,13 @@ class DownloadersController < ApplicationController
   end
 
   def update
-    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files])[:base]
+    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
     params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
     
     logger.debug params.inspect
     @downloader = Downloader.find_by_id(params[:id])
     
-    same_files = (params[:downloader][:files] == @downloader.files) if @downloader
+    same_files = (params[:downloader][:files] == @downloader.files and params[:downloader][:folder] == @downloader.folder) if @downloader
     
     respond_to do |format|
       if @downloader.update_attributes(params[:downloader])
