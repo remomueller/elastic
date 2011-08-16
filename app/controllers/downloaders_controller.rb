@@ -75,6 +75,8 @@ class DownloadersController < ApplicationController
     @downloader = current_user.downloaders.find_by_files_and_folder(params[:downloader][:files], params[:downloader][:folder])
     
     if @downloader
+      @downloader.generate_simple_executable! if @downloader.simple_executable_file_url.blank?
+      
       respond_to do |format|
         format.html { redirect_to(@downloader, :notice => 'Equivalent downloader retrieved.') }
         format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]) }
