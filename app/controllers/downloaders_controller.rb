@@ -7,11 +7,11 @@ class DownloadersController < ApplicationController
     # @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
     @downloader = Downloader.find_by_id(params[:id])
     if @downloader and @downloader.download_token == params[:download_token] and @downloader.files.to_s.split(/[\r\n]/).include?(params[:file_path])
-      file_path = File.join('tmp', 'symbolic', @downloader.folder, params[:file_path])
+      file_path = File.join(Rails.root, 'tmp', 'symbolic', @downloader.folder, params[:file_path])
       logger.debug "Path: " + file_path
       if File.exists?(file_path)
         if params[:checksum] == '1'
-          segment = Segment.find_by_files(File.join(Rails.root, file_path))
+          segment = Segment.find_by_files(File.join(file_path))
           if segment
             render :text => segment.checksum
           else
