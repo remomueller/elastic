@@ -44,6 +44,8 @@ class DownloadersController < ApplicationController
   def show
     @downloader = Downloader.find(params[:id])
 
+    @downloader.generate_simple_executable! if @downloader.simple_executable_file_url.blank?
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]) }
