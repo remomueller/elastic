@@ -1,5 +1,9 @@
 == 0.3.0
 
+* Enhancements
+  * Update to Rails 3.1.1
+  * Updated Gemfile
+
 == 0.2.0
 
 * Enhancements

@@ -5,11 +5,15 @@ Elastic::Application.routes.draw do
   match "/announce" => "sites#announce", :as => :announce
   match "/scrape" => "sites#scrape", :as => :scrape
 
-  match '/auth/failure' => 'authentications#failure'
-  match '/auth/:provider/callback' => 'authentications#create'
-  match '/auth/:provider' => 'authentications#passthru'
 
-  resources :authentications
+  match '/contour' => 'contour/samples#index'
+
+  match '/auth/failure' => 'contour/authentications#failure'
+  match '/auth/:provider/callback' => 'contour/authentications#create'
+  match '/auth/:provider' => 'contour/authentications#passthru'
+  
+  resources :authentications, :controller => 'contour/authentications'
+
 
   resources :downloaders do
     member do
@@ -17,7 +21,7 @@ Elastic::Application.routes.draw do
     end
   end
 
-  devise_for :users, :controllers => {:registrations => 'registrations'}, :path_names => { :sign_up => 'register', :sign_in => 'login' }
+  devise_for :users, :controllers => {:registrations => 'contour/registrations', :sessions => 'contour/sessions', :passwords => 'contour/passwords'}, :path_names => { :sign_up => 'register', :sign_in => 'login' }
 
   resources :users do
     member do
