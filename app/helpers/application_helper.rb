@@ -17,7 +17,7 @@ module ApplicationHelper
   end
 
   def cancel
-    link_to image_tag('icons/cross.png', :alt => '') + 'Cancel', URI.parse(request.referer.to_s).path.blank? ? root_path : (URI.parse(request.referer.to_s).path), :class => 'button negative'
+    link_to image_tag('contour/cross.png', :alt => '') + 'Cancel', URI.parse(request.referer.to_s).path.blank? ? root_path : (URI.parse(request.referer.to_s).path), :class => 'button negative'
   end
 
   # Prints out '6 hours ago, Yesterday, 2 weeks ago, 5 months ago, 1 year ago'
@@ -35,7 +35,7 @@ module ApplicationHelper
   end
 
   def information(message = ' Press Enter to Search')
-    "<span class=\"quiet small\">#{image_tag('icons/information.png', :alt => '', :style=>'vertical-align:text-bottom')}#{message}</span>".html_safe
+    "<span class=\"quiet small\">#{image_tag('contour/information.png', :alt => '', :style=>'vertical-align:text-bottom')}#{message}</span>".html_safe
   end
   
   def simple_time(past_time)
