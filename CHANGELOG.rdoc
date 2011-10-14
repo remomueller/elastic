@@ -2,7 +2,7 @@
 
 * Enhancements
   * Update to Rails 3.1.1
-  * Updated Gemfile
+  * Update authentication interface to use Contour 0.5.6
 
 == 0.2.0
 
