@@ -1,13 +1,3 @@
-== Planned
-
-* Documentation
-
-* Enhancements
-
-* Refactoring
-
-* Test Coverage
-
 == 0.2.0
 
 * Enhancements
