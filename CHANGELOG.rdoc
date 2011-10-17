@@ -4,6 +4,9 @@
   * Update to Rails 3.1.1
   * Update authentication interface to use Contour 0.5.6
 
+* Documentation
+  * Added information on how to setup Elastic as a robust/reliable Windows 7 Service using Thin Server and Microsoft Resource Kit Tools
+
 == 0.2.0
 
 * Enhancements
