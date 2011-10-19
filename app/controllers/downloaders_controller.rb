@@ -82,6 +82,8 @@ class DownloadersController < ApplicationController
   end
 
   def create
+    params[:downloader].delete(:trackers) # TODO: For backward compatibility with 0.3.0, will be removed in 0.5.0
+    
     params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
     params[:downloader][:name] = params[:downloader][:files].to_s.split(/[\r\n]/).first if params[:downloader][:name].blank?
     params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
