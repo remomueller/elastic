@@ -3,6 +3,7 @@ require 'test_helper'
 class DownloadersControllerTest < ActionController::TestCase
   setup do
     @downloader = downloaders(:one)
+    login(users(:admin))
   end
 
   test "should get index" do
@@ -18,7 +19,8 @@ class DownloadersControllerTest < ActionController::TestCase
 
   test "should create downloader" do
     assert_difference('Downloader.count') do
-      post :create, :downloader => @downloader.attributes
+      post :create, :downloader => { :files => '', :trackers => '', :name => 'Downloader 3', :folder => 'folder' },
+                    :target_file_name => 'downloader3'
     end
 
     assert_redirected_to downloader_path(assigns(:downloader))

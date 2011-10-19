@@ -1,5 +1,9 @@
 class Downloader < ActiveRecord::Base
-  
+
+  # Named Scopes
+  scope :current, :conditions => { :deleted => false }
+
+  # Model Relationships
   belongs_to :user
   
   # mount_uploader :torrent_file, FileUploader

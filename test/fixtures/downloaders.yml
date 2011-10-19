@@ -1,19 +1,19 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  user_id: 1
+  user_id: 3
   name: MyString
   files: MyText
   trackers: MyText
   info_hash: MyString
-  torrent_file: MyString
   comments: MyText
+  folder: folder_one
 
 two:
-  user_id: 1
+  user_id: 3
   name: MyString
-  files: MyText
+  files: "MyText, MyText2"
   trackers: MyText
   info_hash: MyString
-  torrent_file: MyString
   comments: MyText
+  folder: folder_two

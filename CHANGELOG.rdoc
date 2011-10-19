@@ -7,6 +7,9 @@
 * Documentation
   * Added information on how to setup Elastic as a robust/reliable Windows 7 Service using Thin Server and Microsoft Resource Kit Tools
 
+* Testing
+  * Test suite updated to contain base set of passing test cases
+
 == 0.2.0
 
 * Enhancements
