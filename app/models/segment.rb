@@ -1,5 +1,8 @@
 class Segment < ActiveRecord::Base
 
+  # Named Scopes
+  scope :current, :conditions => { }
+
   # Model Relationships
   belongs_to :user
 

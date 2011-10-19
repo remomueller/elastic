@@ -1,0 +1,24 @@
+<div style="clear:both"></div>
+
+<table style="width:100%">
+  <tr>
+    <th>User</th>
+    <th>Name</th>
+    <th>Files</th>
+    <th>Simple Executable file</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @downloaders.each do |downloader| %>
+    <tr>
+      <td><%= downloader.user_id %></td>
+      <td><%= link_to downloader.name, downloader %></td>
+      <td><%= downloader.file_count %></td>
+      <td><%= link_to File.basename(downloader.simple_executable_file.path), SITE_URL + downloader.simple_executable_file.url, :class => 'noicon' if downloader.simple_executable_file and downloader.simple_executable_file.url %></td>
+      <td><%= link_to 'Edit', edit_downloader_path(downloader) %></td>
+      <td><%= link_to 'Destroy', downloader, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<center><%= paginate @downloaders %></center>

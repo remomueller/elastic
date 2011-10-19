@@ -1,0 +1,23 @@
+<div style="clear:both"></div>
+
+<table style="width:100%">
+  <tr>
+    <th>User</th>
+    <th>Name</th>
+    <th>Files</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @segments.each do |segment| %>
+  <tr>
+    <td><%= segment.user_id %></td>
+    <td><%= link_to segment.name, segment %></td>
+    <td><%= link_to segment.files, segment %></td>
+    <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
+    <td><%= link_to 'Destroy', segment, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<center><%= paginate @segments %></center>

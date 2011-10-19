@@ -1,25 +1,18 @@
-<h1>Listing segments</h1>
+<% @title = 'Segments' %>
+<h1><%= @title %></h1>
 
-<table>
-  <tr>
-    <th>User</th>
-    <th>Name</th>
-    <th>Files</th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @segments.each do |segment| %>
-  <tr>
-    <td><%= segment.user_id %></td>
-    <td><%= link_to segment.name, segment %></td>
-    <td><%= link_to segment.files, segment %></td>
-    <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
-    <td><%= link_to 'Destroy', segment, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
+<% if current_user.system_admin? %>
+  <%= link_to image_tag('contour/addfile.png', :alt => '') + "Create New Segment", new_segment_path, :class => 'button positive' %>
 <% end %>
-</table>
 
-<br />
+<%= form_tag segments_path, :method => :get, :remote => true, :id => "segments_search" do %>
+  <%= hidden_field_tag :order %>
+  Search <%= text_field_tag 'search', params[:search] %> <%= information %>
+  <div id="segments"><div style="clear:both"></div><br /><center><%= image_tag "ajax-loader.gif" %></center></div>
+<% end %>
 
-<%= link_to 'New Segment', new_segment_path %>
+<%= javascript_tag do %>
+  $(function(){
+    $.get($("#segments_search").attr("action"), $("#segments_search").serialize(), null, "script");
+  });
+<% end %>

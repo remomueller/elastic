@@ -1,27 +1,18 @@
-<h1>Listing Downloaders</h1>
+<% @title = 'Downloaders' %>
+<h1><%= @title %></h1>
 
-<table>
-  <tr>
-    <th>User</th>
-    <th>Name</th>
-    <th>Files</th>
-    <th>Simple Executable file</th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @downloaders.each do |downloader| %>
-  <tr>
-    <td><%= downloader.user_id %></td>
-    <td><%= link_to downloader.name, downloader %></td>
-    <td><%= downloader.file_count %></td>
-    <td><%= link_to File.basename(downloader.simple_executable_file.path), SITE_URL + downloader.simple_executable_file.url, :class => 'noicon' if downloader.simple_executable_file and downloader.simple_executable_file.url %></td>
-    <td><%= link_to 'Edit', edit_downloader_path(downloader) %></td>
-    <td><%= link_to 'Destroy', downloader, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+<% if current_user.system_admin? %>
+  <%= link_to image_tag('contour/addfile.png', :alt => '') + "Create New Downloader", new_downloader_path, :class => 'button positive' %>
 <% end %>
-</table>
 
-<br />
+<%= form_tag downloaders_path, :method => :get, :remote => true, :id => "downloaders_search" do %>
+  <%= hidden_field_tag :order %>
+  Search <%= text_field_tag 'search', params[:search] %> <%= information %>
+  <div id="downloaders"><div style="clear:both"></div><br /><center><%= image_tag "ajax-loader.gif" %></center></div>
+<% end %>
 
-<%= link_to 'New Downloader', new_downloader_path %>
+<%= javascript_tag do %>
+  $(function(){
+    $.get($("#downloaders_search").attr("action"), $("#downloaders_search").serialize(), null, "script");
+  });
+<% end %>

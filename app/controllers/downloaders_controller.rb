@@ -31,15 +31,30 @@ class DownloadersController < ApplicationController
       render :text => error, :status => 404
     end
   end
-  
-  def index
-    @downloaders = Downloader.all
 
+  def index
+    # current_user.update_attribute :downloaders_per_page, params[:downloaders_per_page].to_i if params[:downloaders_per_page].to_i >= 10 and params[:downloaders_per_page].to_i <= 200
+    @order = params[:order].blank? ? 'downloaders.name' : params[:order]
+    downloader_scope = Downloader.current
+    @search_terms = params[:search].to_s.gsub(/[^0-9a-zA-Z]/, ' ').split(' ')
+    @search_terms.each{|search_term| downloader_scope = downloader_scope.search(search_term) }
+    downloader_scope = downloader_scope.order(@order)
+    @downloaders = downloader_scope.page(params[:page]).per(20) #(current_user.downloaders_per_page)
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @downloaders }
+      format.html
+      format.js
+      format.json { render json: @downloaders }
     end
   end
+  
+  # def index
+  #   @downloaders = Downloader.all
+  # 
+  #   respond_to do |format|
+  #     format.html # index.html.erb
+  #     format.xml  { render :xml => @downloaders }
+  #   end
+  # end
 
   def show
     @downloader = Downloader.find(params[:id])

@@ -2,13 +2,16 @@ class SegmentsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :check_system_admin
   
-  # GET /segments
-  # GET /segments.json
   def index
-    @segments = Segment.all
-
+    @order = params[:order].blank? ? 'segments.name' : params[:order]
+    segment_scope = Segment.current
+    @search_terms = params[:search].to_s.gsub(/[^0-9a-zA-Z]/, ' ').split(' ')
+    @search_terms.each{|search_term| segment_scope = segment_scope.search(search_term) }
+    segment_scope = segment_scope.order(@order)
+    @segments = segment_scope.page(params[:page]).per(20)
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
+      format.js
       format.json { render json: @segments }
     end
   end
