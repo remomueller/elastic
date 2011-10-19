@@ -2,8 +2,8 @@ require 'test_helper'
 
 class DownloadersControllerTest < ActionController::TestCase
   setup do
-    @downloader = downloaders(:one)
     login(users(:admin))
+    @downloader = downloaders(:one)
   end
 
   test "should get index" do

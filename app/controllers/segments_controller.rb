@@ -1,4 +1,7 @@
 class SegmentsController < ApplicationController
+  before_filter :authenticate_user!
+  before_filter :check_system_admin
+  
   # GET /segments
   # GET /segments.json
   def index

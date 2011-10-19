@@ -1,5 +1,13 @@
 == 0.4.0
 
+* Documentation
+  * Default database for windows is now set to pg instead of sqlite3
+  * The default downloader type is now a Ruby program wrapped inside of an executable that uses Ruby Net class to incrementally download files
+  * Peer-to-peer file downloader generation has been removed
+
+* Bug Fix
+  * Assets compression turned off since Windows currently fails on rake assets:precompile
+
 == 0.3.0
 
 * Enhancements

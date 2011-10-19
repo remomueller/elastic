@@ -2,6 +2,7 @@ require 'test_helper'
 
 class SegmentsControllerTest < ActionController::TestCase
   setup do
+    login(users(:admin))
     @segment = segments(:one)
   end
 

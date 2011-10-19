@@ -46,6 +46,7 @@
   thin start -p [my_port_number] -e production
 
 
+# Based on information from: http://unicornless.com/systems-administration/run-thin-as-windows-service
 # Installing as a service
 
 # Windows 7 Instructions (modified from www.dixis.com/?p=140):

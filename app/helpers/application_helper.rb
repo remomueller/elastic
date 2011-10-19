@@ -1,21 +1,4 @@
 module ApplicationHelper
-
-  # the number should be from 0 to 100
-  def color_for_number(number, label)
-    colors = ['ff0033', 'ff3333', 'ff6633', 'ff9933', 'E59A00', 'FDB500', '92E400', '75FF00', '42FF00', '33cc00', '00cc00']
-    color_size = 11
-    
-    if number == 0
-      color = 'AAAAAA'
-    elsif number == 100
-      color = '0066ff'
-    else
-      color = colors[number.to_i / (colors.size - 1)]
-    end
-    
-    "<span style=\"color:##{color}\">#{label}</span>".html_safe
-  end
-
   def cancel
     link_to image_tag('contour/cross.png', :alt => '') + 'Cancel', URI.parse(request.referer.to_s).path.blank? ? root_path : (URI.parse(request.referer.to_s).path), :class => 'button negative'
   end
@@ -45,19 +28,6 @@ module ApplicationHelper
     else
       past_time.strftime("on %b %d, %Y at %I:%M %p")
     end
-  end
-  
-  def display_status(status)
-    result = '<table class="status-table"><tr>'
-    case status when 'planned'
-      result << "<td><div class=\"status_marked planned\" title=\"Planned\">P</div></td><td><div class=\"status_unmarked\" title=\"Ongoing\">O</div></td><td><div class=\"status_unmarked\" title=\"Completed\">C</div></td>"
-    when 'ongoing'
-      result << "<td><div class=\"status_marked planned\" title=\"Planned\">P</div></td><td><div class=\"status_marked ongoing\" title=\"Ongoing\">O</div></td><td><div class=\"status_unmarked\" title=\"Completed\">C</div></td>"
-    when 'completed'
-      result << "<td><div class=\"status_marked planned\" title=\"Planned\">P</div></td><td><div class=\"status_marked ongoing\" title=\"Ongoing\">O</div></td><td><div class=\"status_marked completed\" title=\"Completed\">C</div></td>"
-    end
-    result << '</tr></table>'
-    result.html_safe
   end
   
   def sort_field_helper(order, sort_field, display_name, search_form_id  = 'search_form')
