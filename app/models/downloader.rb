@@ -6,17 +6,7 @@ class Downloader < ActiveRecord::Base
   # Model Relationships
   belongs_to :user
   
-  # mount_uploader :torrent_file, FileUploader
-  mount_uploader :executable_file, FileUploader
   mount_uploader :simple_executable_file, FileUploader
-  
-  # def torrent_file_url
-  #   (self.torrent_file and self.torrent_file.url) ? SITE_URL + self.torrent_file.url : ''
-  # end
-  
-  def executable_file_url
-    (self.executable_file and self.executable_file.url) ? SITE_URL + self.executable_file.url : ''
-  end
   
   def simple_executable_file_url
     (self.simple_executable_file and self.simple_executable_file.url) ? SITE_URL + self.simple_executable_file.url : ''
@@ -43,19 +33,6 @@ class Downloader < ActiveRecord::Base
     return {:base => available_files.compact.uniq.sort.join("\n"), :path => updated_file_locations.compact.uniq.sort}
   end
 
-  def generate_torrents!(target_file_name, piece_size = 256)
-    self.generate_checksums!
-    
-    updated_file_locations = Downloader.filter_files(self.files, self.folder)[:path]
-    updated_file_locations.each do |file_location|
-      segment = Segment.find_or_create_by_files(file_location)
-      segment.update_attributes :trackers => self.trackers, :comments => self.comments      
-      segment.generate_torrent!(file_location, piece_size) if segment.torrent_file.blank?
-    end
-    
-    self.generate_executable!
-  end
-  
   def generate_checksums!
     updated_file_locations = Downloader.filter_files(self.files, self.folder)[:path]
     updated_file_locations.each do |file_location|
@@ -127,55 +104,5 @@ class Downloader < ActiveRecord::Base
       #   logger.debug "Exception: #{e.inspect}"
       # end
     end
-    
-    
-    
-  end
-  
-  
-  def generate_executable!
-    if ENV['OS'] == "Windows_NT"
-      # begin
-        logger.debug FileUtils.pwd
-      
-        
-        script_file_path = File.join('tmp', 'files', 'file_downloader.rb')
-        executable_file_path = File.join(File.dirname(script_file_path), File.basename(script_file_path, ".rb") + ".exe")
-    
-        
-    
-        FileUtils.cd(File.join('tmp', 'files'))
-        
-        segment_files = []
-        self.files.split(/[\r\n]/).each do |file|
-          segment_files << File.basename(file) + ".torrent"
-        end
-        
-        
-        ocra_cmd = "ocra #{File.basename(script_file_path)} #{segment_files.join(' ')}"
-        logger.debug ocra_cmd
-        
-        t = Time.now
-        logger.debug "Waiting on ocra..."
-        status, stdout, stderr = 
-          systemu ocra_cmd do |cid|
-            logger.debug "   #{Time.now - t}"
-            sleep 1
-          end
-        logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
-        
-        FileUtils.cd(Rails.root)
-        
-        exe_file = File.new(executable_file_path)
-        self.executable_file = exe_file
-        self.save
-        exe_file.close
-        
-        logger.debug "Deleting #{executable_file_path}"
-        File.delete(executable_file_path) if File.exists?(executable_file_path)
-      # rescue => e
-      #   logger.debug "Exception: #{e.inspect}"
-      # end
-    end
-  end
+  end  
 end

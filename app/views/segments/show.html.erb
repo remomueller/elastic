@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <b>User:</b>
   <%= @segment.user_id %>
@@ -14,27 +12,6 @@
   <b>Files:</b>
   <%= @segment.files %>
 </p>
-
-<p>
-  <b>Trackers:</b>
-  <%= @segment.trackers %>
-</p>
-
-<p>
-  <b>Torrent file:</b>
-  <%= link_to File.basename(@segment.torrent_file.path), SITE_URL + @segment.torrent_file.url, :class => 'noicon' if @segment.torrent_file and @segment.torrent_file.url %>
-</p>
-
-<p>
-  <b>Comments:</b>
-  <%= @segment.comments %>
-</p>
-
-<p>
-  <b>Torrent creation time:</b>
-  <%= @segment.torrent_creation_time %>
-</p>
-
 
 <%= link_to 'Edit', edit_segment_path(@segment) %> |
 <%= link_to 'Back', segments_path %>

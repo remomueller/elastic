@@ -48,7 +48,7 @@ class DownloadersController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]) }
+      format.xml  { render :xml => @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]) }
     end
   end
 
@@ -68,7 +68,6 @@ class DownloadersController < ApplicationController
 
   def create
     params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
-    params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
     params[:downloader][:name] = params[:downloader][:files].to_s.split(/[\r\n]/).first if params[:downloader][:name].blank?
     params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
     
@@ -81,7 +80,7 @@ class DownloadersController < ApplicationController
       
       respond_to do |format|
         format.html { redirect_to(@downloader, :notice => 'Equivalent downloader retrieved.') }
-        format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]) }
+        format.xml  { render :xml => @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]) }
       end
     else
     
@@ -89,10 +88,9 @@ class DownloadersController < ApplicationController
 
       respond_to do |format|
         if @downloader.save
-          # @downloader.generate_torrents!(params[:target_file_name])
           @downloader.generate_simple_executable!
           format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
-          format.xml  { render :xml => @downloader.to_xml(:methods => [:torrent_file_url, :executable_file_url, :file_count, :simple_executable_file_url], :except => [:torrent_file, :executable_file, :simple_executable_file]), :status => :created, :location => @downloader }
+          format.xml  { render :xml => @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]), :status => :created, :location => @downloader }
         else
           format.html { render :action => "new" }
           format.xml  { render :xml => @downloader.errors, :status => :unprocessable_entity }
@@ -103,16 +101,13 @@ class DownloadersController < ApplicationController
 
   def update
     params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
-    params[:downloader][:trackers] = "#{SITE_URL}/announce" if params[:downloader][:trackers].blank?
     
-    logger.debug params.inspect
     @downloader = Downloader.find_by_id(params[:id])
     
     same_files = (params[:downloader][:files] == @downloader.files and params[:downloader][:folder] == @downloader.folder) if @downloader
     
     respond_to do |format|
       if @downloader.update_attributes(params[:downloader])
-        # @downloader.generate_torrents!(params[:target_file_name]) unless same_files
         @downloader.generate_simple_executable! unless same_files
         format.html { redirect_to(@downloader, :notice => 'Downloader was successfully updated.') }
         format.xml  { head :ok }

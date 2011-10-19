@@ -14,26 +14,6 @@
 </p>
 
 <p>
-  <b>Trackers:</b>
-  <%= @downloader.trackers %>
-</p>
-
-<p>
-  <b>Info hash:</b>
-  <%= @downloader.info_hash %>
-</p>
-
-<p>
-  <b>Torrent file:</b>
-  <%= link_to File.basename(@downloader.torrent_file.path), SITE_URL + @downloader.torrent_file.url, :class => 'noicon' if @downloader.torrent_file and @downloader.torrent_file.url %>
-</p>
-
-<p>
-  <b>Executable file:</b>
-  <%= link_to File.basename(@downloader.executable_file.path), SITE_URL + @downloader.executable_file.url, :class => 'noicon' if @downloader.executable_file and @downloader.executable_file.url %>
-</p>
-
-<p>
   <b>Simple Executable file:</b>
   <%= link_to File.basename(@downloader.simple_executable_file.path), SITE_URL + @downloader.simple_executable_file.url, :class => 'noicon' if @downloader.simple_executable_file and @downloader.simple_executable_file.url %>
 </p>

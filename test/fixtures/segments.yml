@@ -4,16 +4,9 @@ one:
   user_id: 1
   name: MyString
   files: MyText
-  trackers: MyText
-  torrent_file: MyString
-  comments: MyText
-  torrent_creation_time: 1
 
 two:
   user_id: 1
   name: MyString
   files: MyText
-  trackers: MyText
-  torrent_file: MyString
-  comments: MyText
-  torrent_creation_time: 1
+  

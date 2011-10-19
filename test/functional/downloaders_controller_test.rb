@@ -19,7 +19,7 @@ class DownloadersControllerTest < ActionController::TestCase
 
   test "should create downloader" do
     assert_difference('Downloader.count') do
-      post :create, :downloader => { :files => '', :trackers => '', :name => 'Downloader 3', :folder => 'folder' },
+      post :create, :downloader => { :files => '', :name => 'Downloader 3', :folder => 'folder' },
                     :target_file_name => 'downloader3'
     end
 

@@ -4,8 +4,6 @@ one:
   user_id: 3
   name: MyString
   files: MyText
-  trackers: MyText
-  info_hash: MyString
   comments: MyText
   folder: folder_one
 
@@ -13,7 +11,5 @@ two:
   user_id: 3
   name: MyString
   files: "MyText, MyText2"
-  trackers: MyText
-  info_hash: MyString
   comments: MyText
   folder: folder_two

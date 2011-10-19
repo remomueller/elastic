@@ -5,10 +5,6 @@
     <th>User</th>
     <th>Name</th>
     <th>Files</th>
-    <th>Trackers</th>
-    <th>Torrent file</th>
-    <th>Comments</th>
-    <th>Torrent creation time</th>
     <th></th>
     <th></th>
   </tr>
@@ -18,10 +14,6 @@
     <td><%= segment.user_id %></td>
     <td><%= link_to segment.name, segment %></td>
     <td><%= link_to segment.files, segment %></td>
-    <td><%= segment.trackers %></td>
-    <td><%= link_to File.basename(segment.torrent_file.path), SITE_URL + segment.torrent_file.url, :class => 'noicon' if segment.torrent_file and segment.torrent_file.url %></td>
-    <td><%= segment.comments %></td>
-    <td><%= segment.torrent_creation_time.to_s + ' sec' %></td>
     <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
     <td><%= link_to 'Destroy', segment, confirm: 'Are you sure?', method: :delete %></td>
   </tr>
