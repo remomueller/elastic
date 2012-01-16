@@ -13,10 +13,8 @@ config/initializers/secret_token.rb
 public/cache/*
 public/stylesheets/cache/*
 public/javascripts/cache/*
-
-public/forms/*
-
 public/uploads/*
+public/forms/*
 
 # Other Files
 
@@ -29,6 +27,7 @@ log/*.log
 tmp/**/*
 tmp/restart.txt
 .sass-cache/
+coverage/*
 
 # OS generated files #
 .DS_Store

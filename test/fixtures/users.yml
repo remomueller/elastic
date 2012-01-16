@@ -1,9 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 valid:
-  id: 1
-  first_name: MyString
-  last_name: MyString
+  first_name: FirstName
+  last_name: LastName
   status: active
   deleted: false
   system_admin: false
@@ -27,7 +26,6 @@ valid:
   authentication_token: MyString
 
 two:
-  id: 2
   first_name: MyString
   last_name: MyString
   status: active
@@ -53,7 +51,6 @@ two:
   authentication_token: MyString
   
 admin:
-  id: 3
   first_name: MyString
   last_name: MyString
   status: active
@@ -79,7 +76,6 @@ admin:
   authentication_token: MyString
 
 pending:
-  id: 4
   first_name: MyString
   last_name: MyString
   status: pending
@@ -105,7 +101,6 @@ pending:
   authentication_token: MyString
 
 deleted:
-  id: 5
   first_name: MyString
   last_name: MyString
   status: active
