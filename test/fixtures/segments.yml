@@ -9,4 +9,9 @@ two:
   user: valid
   name: MyString
   files: MyText
-  
+
+three:
+  user: admin
+  name: Actual File
+  files: <%= Rails.root %>/tmp/symbolic/test/test_file.txt
+  checksum: a748f32489958e3c31f3ea568dfc0201

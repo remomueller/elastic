@@ -6,10 +6,20 @@ one:
   files: MyText
   comments: MyText
   folder: folder_one
+  download_token: abc
 
 two:
   user: admin
   name: MyString
-  files: "MyText, MyText2"
+  files: "test_file.txt"
   comments: MyText
-  folder: folder_two
+  folder: test
+  download_token: abc2
+
+three:
+  user: admin
+  name: MyString
+  files: "missing.txt"
+  comments: MyText
+  folder: test
+  download_token: abcmissing

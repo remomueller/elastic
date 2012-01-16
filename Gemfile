@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'rails', '3.2.0.rc2'
 
@@ -11,7 +11,7 @@ gem 'eventmachine',   '~> 1.0.0.beta.4.1',  platforms: [:mswin, :mingw]
 gem 'contour',        '~> 0.9.0'            # Basic Layout and Assets
 gem 'carrierwave'                           # File Uploads
 gem 'kaminari'                              # Pagination
-gem 'systemu',        '~> 2.2.0'            # Running Ocra system command
+gem 'systemu',        '~> 2.4.2'            # Running Ocra system command
 gem 'ocra',                                 platforms: [:mingw]
 
 # Gems used only for assets and not required

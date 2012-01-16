@@ -1,7 +1,7 @@
 class Downloader < ActiveRecord::Base
 
   # Named Scopes
-  scope :current, :conditions => { :deleted => false }
+  scope :current, conditions: { deleted: false }
 
   # Model Relationships
   belongs_to :user
@@ -30,7 +30,7 @@ class Downloader < ActiveRecord::Base
       end
     end
     
-    return {:base => available_files.compact.uniq.sort.join("\n"), :path => updated_file_locations.compact.uniq.sort}
+    return { base: available_files.compact.uniq.sort.join("\n"), path: updated_file_locations.compact.uniq.sort }
   end
 
   def generate_checksums!
@@ -47,9 +47,8 @@ class Downloader < ActiveRecord::Base
   #     `-- tmp
   #         |-- cache
   #         |-- files
-  #         |   |-- executable_file_path (.exe)   ex:   my_files.exe      <= The compiled script (contains both .rb and .torrent)
-  #         |   |-- script_file_path (.rb)        ex:   my_files.rb       <= The ruby script that downloads the torrent
-  #         |   `-- target_file_path (.torrent)   ex:   my_files.torrent  <= The actual torrent
+  #         |   |-- executable_file_path (.exe)   ex:   my_files.exe      <= The compiled script (contains both .rb)
+  #         |   `-- script_file_path (.rb)        ex:   my_files.rb       <= The ruby script that downloads the target files
   #         |-- pids
   #         |-- sessions
   #         |-- sockets
@@ -80,11 +79,9 @@ class Downloader < ActiveRecord::Base
         
         t = Time.now
         logger.debug "Waiting on ocra..."
-        status, stdout, stderr = 
-          systemu ocra_cmd do |cid|
-            logger.debug "   #{Time.now - t}"
-            sleep 1
-          end
+
+        status, stdout, stderr = systemu ocra_cmd
+
         logger.debug "Status: #{status}\nStdout: #{stdout}\nStderr: #{stderr}"
         
         FileUtils.cd(Rails.root)

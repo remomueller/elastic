@@ -33,7 +33,7 @@ class FileUploader < CarrierWave::Uploader::Base
 
   # Add a white list of extensions which are allowed to be uploaded.
   def extension_white_list
-    %w(torrent exe)
+    %w(exe)
   end
 
   # Override the filename of the uploaded files:

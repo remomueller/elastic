@@ -24,6 +24,15 @@ class SegmentsControllerTest < ActionController::TestCase
 
     assert_redirected_to segment_path(assigns(:segment))
   end
+  
+  test "should not create segment without files" do
+    assert_difference('Segment.count', 0) do
+      post :create, segment: { name: 'Name' }
+    end
+    
+    assert_not_nil assigns(:segment)
+    assert_template 'new'
+  end
 
   test "should show segment" do
     get :show, id: @segment.to_param
@@ -38,6 +47,12 @@ class SegmentsControllerTest < ActionController::TestCase
   test "should update segment" do
     put :update, id: @segment.to_param, segment: @segment.attributes
     assert_redirected_to segment_path(assigns(:segment))
+  end
+
+  test "should not update segment without files" do
+    put :update, id: @segment.to_param, segment: { name: 'Updated Name', files: '' }
+    assert_not_nil assigns(:segment)
+    assert_template 'edit'
   end
 
   test "should destroy segment" do

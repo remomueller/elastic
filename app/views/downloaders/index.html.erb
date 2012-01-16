@@ -5,7 +5,7 @@
   <%= link_to image_tag('contour/addfile.png', :alt => '') + "Create New Downloader", new_downloader_path, :class => 'button positive' %>
 <% end %>
 
-<%= form_tag downloaders_path, :method => :get, :remote => true, :id => "downloaders_search" do %>
+<%= form_tag downloaders_path, :method => :get, :remote => true, id: "downloaders_search" do %>
   <%= hidden_field_tag :order %>
   Search <%= text_field_tag 'search', params[:search] %> <%= information %>
   <div id="downloaders"><div style="clear:both"></div><br /><center><%= image_tag "ajax-loader.gif" %></center></div>

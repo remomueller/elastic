@@ -14,10 +14,10 @@ class User < ActiveRecord::Base
   serialize :email_notifications, Hash
 
   # Named Scopes
-  scope :current, :conditions => { :deleted => false }
-  scope :status, lambda { |*args|  { :conditions => ["users.status IN (?)", args.first] } }
-  scope :system_admins, :conditions => { :system_admin => true }
-  scope :search, lambda { |*args| {:conditions => [ 'LOWER(first_name) LIKE ? or LOWER(last_name) LIKE ? or LOWER(email) LIKE ?', '%' + args.first.downcase.split(' ').join('%') + '%', '%' + args.first.downcase.split(' ').join('%') + '%', '%' + args.first.downcase.split(' ').join('%') + '%' ] } }
+  scope :current, conditions: { deleted: false }
+  scope :status, lambda { |*args|  { conditions: ["users.status IN (?)", args.first] } }
+  scope :system_admins, conditions: { system_admin: true }
+  scope :search, lambda { |*args| { conditions: [ 'LOWER(first_name) LIKE ? or LOWER(last_name) LIKE ? or LOWER(email) LIKE ?', '%' + args.first.downcase.split(' ').join('%') + '%', '%' + args.first.downcase.split(' ').join('%') + '%', '%' + args.first.downcase.split(' ').join('%') + '%' ] } }
   
   # Model Validation
   validates_presence_of     :first_name
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 
   # Model Relationships
   has_many :authentications
-  has_many :downloaders #, :conditions => {:deleted => false}
+  has_many :downloaders #, conditions: { deleted: false }
 
   # User Methods
   

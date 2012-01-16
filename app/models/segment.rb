@@ -1,7 +1,10 @@
 class Segment < ActiveRecord::Base
 
   # Named Scopes
-  scope :current, :conditions => { }
+  scope :current, conditions: { }
+
+  # Model Validation
+  validates_presence_of :files
 
   # Model Relationships
   belongs_to :user

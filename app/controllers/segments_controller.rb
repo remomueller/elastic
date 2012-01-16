@@ -16,10 +16,8 @@ class SegmentsController < ApplicationController
     end
   end
 
-  # GET /segments/1
-  # GET /segments/1.json
   def show
-    @segment = Segment.find(params[:id])
+    @segment = Segment.find_by_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -27,8 +25,6 @@ class SegmentsController < ApplicationController
     end
   end
 
-  # GET /segments/new
-  # GET /segments/new.json
   def new
     @segment = Segment.new
 
@@ -38,13 +34,10 @@ class SegmentsController < ApplicationController
     end
   end
 
-  # GET /segments/1/edit
   def edit
-    @segment = Segment.find(params[:id])
+    @segment = Segment.find_by_id(params[:id])
   end
 
-  # POST /segments
-  # POST /segments.json
   def create
     @segment = Segment.new(params[:segment])
 
@@ -59,10 +52,8 @@ class SegmentsController < ApplicationController
     end
   end
 
-  # PUT /segments/1
-  # PUT /segments/1.json
   def update
-    @segment = Segment.find(params[:id])
+    @segment = Segment.find_by_id(params[:id])
 
     respond_to do |format|
       if @segment.update_attributes(params[:segment])
@@ -75,10 +66,8 @@ class SegmentsController < ApplicationController
     end
   end
 
-  # DELETE /segments/1
-  # DELETE /segments/1.json
   def destroy
-    @segment = Segment.find(params[:id])
+    @segment = Segment.find_by_id(params[:id])
     @segment.destroy
 
     respond_to do |format|

@@ -13,22 +13,22 @@ class DownloadersController < ApplicationController
         if params[:checksum] == '1'
           segment = Segment.find_by_files(File.join(file_path))
           if segment
-            render :text => segment.checksum
+            render text: segment.checksum
           else
-            render :text => 'NOTHING'
+            render text: 'NOTHING'
           end
         else
-          send_file file_path, :disposition =>'attachment'
+          send_file file_path, disposition: 'attachment'
         end
       else
         error = "The file is no longer available"
         logger.debug error
-        render :text => error, :status => 404, :layout => false
+        render text: error, status: 404, layout: false
       end
     else
       error = "No longer authorized to download this file"
       logger.debug error
-      render :text => error, :status => 404
+      render text: error, status: 404
     end
   end
 
