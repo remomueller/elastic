@@ -17,7 +17,7 @@ class Segment < ActiveRecord::Base
       f = File.new(file_name)
       begin
         md5_checksum = Digest::MD5.hexdigest(f.read)
-      rescue NoMemoryError => e
+      rescue NoMemoryError
         logger.debug "\n[NOMEMORY] Failed to Allocate Memory: File Size #{f.size}"
       end
       self.update_attribute :checksum, md5_checksum

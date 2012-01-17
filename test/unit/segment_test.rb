@@ -1,8 +1,15 @@
 require 'test_helper'
 
 class SegmentTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  
+  test "should generate checksum" do
+    segments(:generate_checksum).generate_checksum!
+    assert_equal "d41d8cd98f00b204e9800998ecf8427e", segments(:generate_checksum).checksum
   end
+  
+  test "should not generate checksum for nonexistent file" do
+    segments(:two).generate_checksum!
+    assert_equal "", segments(:two).checksum
+  end
+  
 end

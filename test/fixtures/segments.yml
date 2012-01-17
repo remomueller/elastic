@@ -15,3 +15,8 @@ three:
   name: Actual File
   files: <%= Rails.root %>/tmp/symbolic/test/test_file.txt
   checksum: a748f32489958e3c31f3ea568dfc0201
+
+generate_checksum:
+  user: valid
+  name: Generate Checksum
+  files: <%= Rails.root %>/tmp/symbolic/test/checksum.txt

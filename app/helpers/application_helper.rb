@@ -5,7 +5,7 @@ module ApplicationHelper
 
   # Prints out '6 hours ago, Yesterday, 2 weeks ago, 5 months ago, 1 year ago'
   def recent_activity(past_time)
-    return '' unless past_time
+    return '' unless past_time.kind_of?(Time)
     seconds_ago = (Time.now - past_time)
     if seconds_ago < 60.minute then "<span style='color:#6DD1EC;font-weight:bold;font-variant:small-caps;'>#{pluralize((seconds_ago/1.minute).to_i, 'minute')} ago </span>".html_safe
     elsif seconds_ago < 1.day then "<span style='color:#ADDD1E;font-weight:bold;font-variant:small-caps;'>#{pluralize((seconds_ago/1.hour).to_i, 'hour')} ago </span>".html_safe
@@ -22,14 +22,16 @@ module ApplicationHelper
   end
   
   def simple_time(past_time)
-    return '' unless past_time
+    return '' if past_time.blank?
     if past_time.to_date == Date.today
       past_time.strftime("at %I:%M %p")
+    elsif past_time.year == Date.today.year
+      past_time.strftime("on %b %d at %I:%M %p")
     else
       past_time.strftime("on %b %d, %Y at %I:%M %p")
     end
   end
-  
+    
   def sort_field_helper(order, sort_field, display_name, search_form_id  = 'search_form')
     result = ''
     if order == sort_field

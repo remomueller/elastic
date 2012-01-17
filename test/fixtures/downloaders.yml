@@ -23,3 +23,27 @@ three:
   comments: MyText
   folder: test
   download_token: abcmissing
+
+no_files:
+  user: admin
+  name: No Files
+  # files:
+  comments: No Files Comment
+  folder: test
+  download_token: nofiles
+
+two_files:
+  user: admin
+  name: No Files
+  files: "FileOne.txt\nFileTwo.txt"
+  comments: No Files Comment
+  folder: test
+  download_token: nofiles
+
+with_executable:
+  user: admin
+  name: With Executable
+  files: "checksum.txt"
+  comments: Fake Executable for testing
+  folder: test
+  download_token: fake
