@@ -61,8 +61,31 @@ class DownloadersControllerTest < ActionController::TestCase
       post :create, downloader: { files: '', name: 'Downloader 3', folder: 'folder' },
                     target_file_name: 'downloader3'
     end
+    assert_not_nil assigns(:downloader)
 
     assert_redirected_to downloader_path(assigns(:downloader))
+  end
+
+  test "should create link for existing downloader" do
+    assert_difference('Downloader.count', 0) do
+      post :create, downloader: { files: 'test_file.txt', name: 'Downloader 3', folder: 'test' },
+                    target_file_name: 'downloader3'
+    end
+
+    assert_not_nil assigns(:downloader)
+
+    assert_redirected_to downloader_path(assigns(:downloader))
+  end
+  
+  test "should not create downloader with blank name and files" do
+    assert_difference('Downloader.count', 0) do
+      post :create, downloader: { files: '', name: '', folder: 'folder' },
+                    target_file_name: 'downloader3'
+    end
+    assert_not_nil assigns(:downloader)
+    assert_equal ["can't be blank"], assigns(:downloader).errors[:name]
+    assert_equal 1, assigns(:downloader).errors.size
+    assert_template 'new'
   end
 
   test "should show downloader" do
@@ -76,8 +99,16 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should update downloader" do
-    put :update, id: @downloader.to_param, :downloader => @downloader.attributes
+    put :update, id: @downloader.to_param, downloader: @downloader.attributes
     assert_redirected_to downloader_path(assigns(:downloader))
+  end
+
+  test "should not update downloader with blank name" do
+    put :update, id: @downloader.to_param, downloader: { name: '', files: 'MyText', folder: 'folder_one' }
+    assert_not_nil assigns(:downloader)
+    assert_equal ["can't be blank"], assigns(:downloader).errors[:name]
+    assert_equal 1, assigns(:downloader).errors.size
+    assert_template 'edit'
   end
 
   test "should destroy downloader" do
