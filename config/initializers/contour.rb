@@ -19,16 +19,28 @@ Contour.setup do |config|
   # Enter the items you wish to see in the menu
   config.menu_items = [
     {
-      :name => 'Login', id: 'auth', :display => 'not_signed_in', :position => 'right', :position_class => 'right',
-      :links => [{:name => 'Login', :path => 'new_user_session_path'}, {:html => "<hr>"}, {:name => 'Sign Up', :path => 'new_user_registration_path'}]
+      name: 'Login', display: 'not_signed_in', path: 'new_user_session_path', position: 'right',
+      links: [{ name: 'Sign Up', path: 'new_user_registration_path' }]
     },
     {
-      :name => 'current_user.name', :eval => true, id: 'auth', :display => 'signed_in', :position => 'right', :position_class => 'right',
-      :links => [{:html => '"<div style=\"white-space:nowrap\">"+current_user.name+"</div>"', :eval => true}, {:html => '"<div class=\"small quiet\">"+current_user.email+"</div>"', :eval => true}, {:name => 'Settings', :path => 'settings_path'}, {:name => 'Authentications', :path => 'authentications_path'}, {:html => "<hr>"}, {:name => 'Logout', :path => 'destroy_user_session_path'}]
+      name: 'current_user.name', eval: true, display: 'signed_in', path: 'user_path(current_user)', position: 'right',
+      links: [{ html: '"<div class=\"small\" style=\"color:#bbb\">"+current_user.email+"</div>"', eval: true },
+              { name: 'Settings', path: 'settings_path' },
+              { name: 'Authentications', path: 'authentications_path', condition: 'not PROVIDERS.blank?' },
+              { html: "<br />" },
+              { name: 'Logout', path: 'destroy_user_session_path' }]
     },
     {
-      :name => 'Home', id: 'home', :display => 'always', :position => 'left', :position_class => 'left',
-      :links => [{:name => 'Home', :path => 'root_path'}, {:html => "<hr>"}, {:name => 'About', :path => 'about_path'}]
+      name: 'About', display: 'not_signed_in', path: 'about_path', position: 'left',
+      links: []
+    },
+    {
+      name: 'Downloaders', display: 'signed_in', path: 'downloaders_path', position: 'left',
+      links: []
+    },
+    {
+      name: 'Users', display: 'signed_in', name: 'Users', path: 'users_path', position: 'left', condition: 'current_user.system_admin?',
+      links: []
     }
   ]
   
