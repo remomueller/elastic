@@ -25,8 +25,8 @@ Devise.setup do |config|
   # Tell if authentication through request.params is enabled. True by default.
   # config.params_authenticatable = true
 
-  # Tell if authentication through HTTP Basic Auth is enabled. True by default.
-  # config.http_authenticatable = true
+  # Tell if authentication through HTTP Basic Auth is enabled. False by default.
+  config.http_authenticatable = true
 
   # Set this to true to use Basic Auth for AJAX requests.  True by default.
   # config.http_authenticatable_on_xhr = true
@@ -122,32 +122,29 @@ Devise.setup do |config|
   # Lists the formats that should be treated as navigational. Formats like
   # :html, should redirect to the sign in page when the user does not have
   # access, but formats like :xml or :json, should return 401.
+  #
   # If you have any extra navigational formats, like :iphone or :mobile, you
-  # should add them to the navigational formats lists. Default is [:html]
-  # config.navigational_formats = [:html, :iphone]
+  # should add them to the navigational formats lists.
+  #
+  # The :"*/*" and "*/*" formats below is required to match Internet
+  # Explorer requests.
+  # config.navigational_formats = [:"*/*", "*/*", :html]
+
+  # The default HTTP method used to sign out a resource. Default is :delete.
+  config.sign_out_via = :get
+
+  # ==> OmniAuth
+  # Add a new OmniAuth provider. Check the wiki for more information on setting
+  # up on your models and hooks.
+  # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
 
   # ==> Warden configuration
-  # If you want to use other strategies, that are not (yet) supported by Devise,
-  # you can configure them inside the config.warden block. The example below
-  # allows you to setup OAuth, using http://github.com/roman/warden_oauth
+  # If you want to use other strategies, that are not supported by Devise, or
+  # change the failure app, you can configure them inside the config.warden block.
   #
   # config.warden do |manager|
-  #   manager.oauth(:twitter) do |twitter|
-  #     twitter.consumer_secret = <YOUR CONSUMER SECRET>
-  #     twitter.consumer_key  = <YOUR CONSUMER KEY>
-  #     twitter.options :site => 'http://twitter.com'
-  #   end
-  #   manager.default_strategies(:scope => :user).unshift :twitter_oauth
+  #   manager.failure_app   = AnotherApp
+  #   manager.intercept_401 = false
+  #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
-end
-
-module Devise
-  class FailureApp < ActionController::Metal
-    def http_auth
-      self.status = 403
-      self.headers["WWW-Authenticate"] = %(Basic realm=#{Devise.http_authentication_realm.inspect})
-      self.content_type = request.format.to_s
-      self.response_body = http_auth_body
-    end
-  end
 end
