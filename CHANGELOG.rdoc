@@ -17,6 +17,9 @@
   * SimpleCov added for test coverage
   * TravisCI configuration files added
 
+* Bug Fix
+  * Logging in as a valid user no longer creates a redirect loop
+
 == 0.4.0
 
 * Enhancements

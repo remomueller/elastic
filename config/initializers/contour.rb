@@ -39,6 +39,10 @@ Contour.setup do |config|
       links: []
     },
     {
+      name: 'Segments', display: 'signed_in', path: 'segments_path', position: 'left', condition: 'current_user.system_admin?',
+      links: []
+    },
+    {
       name: 'Users', display: 'signed_in', name: 'Users', path: 'users_path', position: 'left', condition: 'current_user.system_admin?',
       links: []
     }

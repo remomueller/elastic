@@ -25,9 +25,17 @@ class User < ActiveRecord::Base
 
   # Model Relationships
   has_many :authentications
-  has_many :downloaders #, conditions: { deleted: false }
+  has_many :downloaders, conditions: { deleted: false }
 
   # User Methods
+  
+  def all_downloaders
+    if self.system_admin?
+      Downloader.current
+    else
+      self.downloaders
+    end
+  end
   
   # Overriding Devise built-in active_for_authentication? method
   def active_for_authentication?

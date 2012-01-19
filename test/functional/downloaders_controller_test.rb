@@ -66,6 +66,14 @@ class DownloadersControllerTest < ActionController::TestCase
     assert_equal 404, @response.status
   end
 
+  test "should get index for valid user" do
+    login(users(:valid))
+    get :index
+    assert_not_nil assigns(:downloaders)
+    assert assigns(:downloaders).where(["user_id != ?", users(:valid).id]).size == 0
+    assert_response :success
+  end
+
   test "should get index" do
     get :index
     assert_response :success

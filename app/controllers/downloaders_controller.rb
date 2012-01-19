@@ -1,6 +1,6 @@
 class DownloadersController < ApplicationController
   before_filter :authenticate_user!, :except => ['download_file']
-  before_filter :check_system_admin, :except => ['download_file']
+  before_filter :check_system_admin, :except => ['download_file', 'index']
   
   def download_file
     @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
@@ -33,7 +33,7 @@ class DownloadersController < ApplicationController
   def index
     # current_user.update_attribute :downloaders_per_page, params[:downloaders_per_page].to_i if params[:downloaders_per_page].to_i >= 10 and params[:downloaders_per_page].to_i <= 200
     @order = params[:order].blank? ? 'downloaders.name' : params[:order]
-    downloader_scope = Downloader.current
+    downloader_scope = current_user.all_downloaders
     @search_terms = params[:search].to_s.gsub(/[^0-9a-zA-Z]/, ' ').split(' ')
     @search_terms.each{|search_term| downloader_scope = downloader_scope.search(search_term) }
     downloader_scope = downloader_scope.order(@order)
