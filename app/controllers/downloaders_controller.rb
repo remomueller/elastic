@@ -41,7 +41,7 @@ class DownloadersController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.json { render json: @downloaders }
+      format.json { render json: @downloaders, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file] }
     end
   end
 
@@ -52,7 +52,8 @@ class DownloadersController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]) }
+      format.xml  { render xml: @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]) }
+      format.json { render json: @downloader, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file] }
     end
   end
 
@@ -62,6 +63,7 @@ class DownloadersController < ApplicationController
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @downloader }
+      format.json { render json: @downloader }
     end
   end
 
@@ -92,6 +94,7 @@ class DownloadersController < ApplicationController
       respond_to do |format|
         format.html { redirect_to(@downloader, :notice => 'Equivalent downloader retrieved.') }
         format.xml  { render :xml => @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]) }
+        format.json { render json: @downloader, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file], status: :created, location: @downloader }
       end
     else
     
@@ -102,10 +105,12 @@ class DownloadersController < ApplicationController
           @downloader.generate_segments!(new_files, params[:downloader][:folder])
           @downloader.generate_simple_executable!
           format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
-          format.xml  { render :xml => @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]), :status => :created, :location => @downloader }
+          format.xml  { render xml: @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]), :status => :created, :location => @downloader }
+          format.json { render json: @downloader, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file], status: :created, location: @downloader }
         else
           format.html { render :action => "new" }
           format.xml  { render :xml => @downloader.errors, :status => :unprocessable_entity }
+          format.json { render json: @downloader.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -125,9 +130,11 @@ class DownloadersController < ApplicationController
         @downloader.generate_simple_executable! unless same_files
         format.html { redirect_to(@downloader, :notice => 'Downloader was successfully updated.') }
         format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @downloader.errors, :status => :unprocessable_entity }
+        format.json { render json: @downloader.errors, status: :unprocessable_entity }
       end
     end
     
@@ -140,6 +147,7 @@ class DownloadersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(downloaders_path) }
       format.xml  { head :ok }
+      format.json  { head :ok }
     end
   end
 end

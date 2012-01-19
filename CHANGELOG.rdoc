@@ -11,6 +11,7 @@
   * Segments now have the following changes:
     * Segments have a many to many associate with downloaders
     * A segment's file checksum is not computed until it is specifically requested through a download checksum request
+  * JSON messaging has been implemented for downloaders, XML messaging will be deprecated in a future release
 
 * Testing
   * SimpleCov added for test coverage

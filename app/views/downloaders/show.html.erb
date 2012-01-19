@@ -39,9 +39,9 @@
 </p>
 
 <p>
-  <b>Downloader Segments <%= @downloader.downloader_segments.size %>:</b>
+  <b>Downloader Segments [<%= @downloader.downloader_segments.size %>]:</b>
   <ul>
-  <%= @downloader.downloader_segments.order('download_count DESC').each do |downloader_segment| %>
+  <% @downloader.downloader_segments.order('download_count DESC').each do |downloader_segment| %>
     <li>D#: <%= downloader_segment.download_count %> C# <%= downloader_segment.checksum_count %> <%= link_to downloader_segment.segment.file_path.gsub(File.join(Rails.root, 'tmp', 'symbolic', @downloader.folder) + '/', ''), downloader_segment.segment if downloader_segment.segment %></li>
   <% end %>
   </ul>

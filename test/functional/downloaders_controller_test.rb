@@ -107,6 +107,23 @@ class DownloadersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should create downloader for json message" do
+    assert_difference('Downloader.count') do
+      post :create, downloader: { files: "checksum.txt\nmissing.txt\ntest_file.txt", name: 'Download_3_Files', folder: 'test' }, target_file_name: 'downloader3', format: 'json'
+    end
+    assert_not_nil assigns(:downloader)
+    
+    assert_equal 3, assigns(:downloader).downloader_segments.size
+    assert_equal 3, assigns(:downloader).segments.size
+
+    assert_equal assigns(:downloader).files_digest, ActiveSupport::JSON.decode(@response.body)['files_digest']
+    assert_equal 3, ActiveSupport::JSON.decode(@response.body)['file_count']
+    assert_equal users(:admin).to_param.to_i, ActiveSupport::JSON.decode(@response.body)['user_id']
+    assert_equal assigns(:downloader).download_token, ActiveSupport::JSON.decode(@response.body)['download_token']
+    assert_equal assigns(:downloader).folder, ActiveSupport::JSON.decode(@response.body)['folder']
+    assert_response :success
+  end
+
   test "should create link for existing downloader" do
     assert_difference('Downloader.count', 0) do
       post :create, downloader: { files: 'test_file.txt', name: 'Downloader 3', folder: 'test' },

@@ -24,9 +24,9 @@
 </p>
 
 <p>
-  <b>Downloader <%= @segment.downloaders.size %>:</b>
+  <b>Downloaders [<%= @segment.downloaders.size %>]:</b>
   <ul>
-  <%= @segment.downloaders.each do |downloader| %>
+  <% @segment.downloaders.each do |downloader| %>
     <%= link_to downloader.name, downloader %>
   <% end %>
   </ul>
