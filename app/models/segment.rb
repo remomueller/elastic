@@ -4,29 +4,29 @@ class Segment < ActiveRecord::Base
   scope :current, conditions: { }
 
   # Model Validation
-  validates_presence_of :files
+  validates_presence_of :file_path
+  validates_uniqueness_of :file_path
 
   # Model Relationships
   belongs_to :user
+  has_many :downloader_segments
+  has_many :downloaders, through: :downloader_segments, conditions: { deleted: false }
 
   # Model Methods
 
   def generate_checksum!
     begin
-      file_name = self.files.split(/[\r\n]/).first
-      f = File.new(file_name)
-      begin
-        md5_checksum = Digest::MD5.hexdigest(f.read)
-      rescue NoMemoryError
-        logger.debug "\n[NOMEMORY] Failed to Allocate Memory: File Size #{f.size}"
-      end
+      f = File.new(self.file_path)
+      md5_checksum = Digest::MD5.hexdigest(f.read)
       self.update_attribute :checksum, md5_checksum
-    rescue => e
+    rescue StandardError, NoMemoryError => e
       logger.debug "Error #{e.inspect}"
+      logger.debug "\nFile Size: #{(f || '').size}"
     ensure
       f.close if f and not f.closed?
       f = nil
     end
+    self.checksum
   end
   
 end

@@ -2,6 +2,15 @@
 
 * Enhancements
   * Update to Rails 3.2.0.rc2 and Contour 0.9.0
+  * Downloaders now have the following changes:
+    * Downloaders are now associated with an external user
+    * Downloaders are now identifiable by a digest of the file names
+    * Tracking now exists per user per file by
+      * Count of checksum requests
+      * Count of file download requests
+  * Segments now have the following changes:
+    * Segments have a many to many associate with downloaders
+    * A segment's file checksum is not computed until it is specifically requested through a download checksum request
 
 * Testing
   * SimpleCov added for test coverage

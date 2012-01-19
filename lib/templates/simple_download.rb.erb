@@ -6,7 +6,7 @@ exit if defined?(Ocra)
 
 # file_locations = ['/downloaders/1/download_file?file_path=abc.txt&download_token=7e9c36efee12b62c4bfa73da0fd1d34b1a47b8d0', '/downloaders/1/download_file?file_path=sample.txt&download_token=7e9c36efee12b62c4bfa73da0fd1d34b1a47b8d0']
 
-file_locations = [<%= self.files.split(/[\r\n]/).collect{|file| "'/downloaders/#{self.id}/download_file?file_path=#{file}&download_token=#{self.download_token}'"}.join(',') %>]
+file_locations = [<%= self.segments.collect{|segment| "'/downloaders/#{self.id}/download_file?file_path=#{segment.file_path.gsub(File.join(Rails.root, 'tmp', 'symbolic', self.folder) + '/', '')}&download_token=#{self.download_token}'"}.join(',') %>]
 
 def checksum(file_name)
   md5_checksum = ''

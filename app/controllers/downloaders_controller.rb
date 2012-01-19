@@ -3,22 +3,20 @@ class DownloadersController < ApplicationController
   before_filter :check_system_admin, :except => ['download_file']
   
   def download_file
-    # Not working in sqlite for some reason...
-    # @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
-    @downloader = Downloader.find_by_id(params[:id])
-    if @downloader and @downloader.download_token == params[:download_token] and @downloader.files.to_s.split(/[\r\n]/).include?(params[:file_path])
-      file_path = File.join(Rails.root, 'tmp', 'symbolic', @downloader.folder, params[:file_path])
-      logger.debug "Path: " + file_path
-      if File.exists?(file_path)
+    @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
+    
+    file_path = File.join(Rails.root, 'tmp', 'symbolic', @downloader.folder, params[:file_path]) if @downloader
+    @segment = @downloader.segments.find_by_file_path(file_path) if @downloader
+    @downloader_segment = @segment.downloader_segments.find_by_downloader_id(@downloader.id) if @segment
+    
+    if @downloader and @segment and @downloader_segment
+      if File.exists?(@segment.file_path)
         if params[:checksum] == '1'
-          segment = Segment.find_by_files(File.join(file_path))
-          if segment
-            render text: segment.checksum
-          else
-            render text: 'NOTHING'
-          end
+          @downloader_segment.update_attribute :checksum_count, @downloader_segment.checksum_count + 1
+          render text: (@segment.checksum.blank? ? @segment.generate_checksum! : @segment.checksum)
         else
-          send_file file_path, disposition: 'attachment'
+          @downloader_segment.update_attribute :download_count, @downloader_segment.download_count + 1
+          send_file @segment.file_path, disposition: 'attachment'
         end
       else
         error = "The file is no longer available"
@@ -46,15 +44,6 @@ class DownloadersController < ApplicationController
       format.json { render json: @downloaders }
     end
   end
-  
-  # def index
-  #   @downloaders = Downloader.all
-  # 
-  #   respond_to do |format|
-  #     format.html # index.html.erb
-  #     format.xml  { render :xml => @downloaders }
-  #   end
-  # end
 
   def show
     @downloader = Downloader.find(params[:id])
@@ -82,15 +71,20 @@ class DownloadersController < ApplicationController
   end
 
   def create
-    params[:downloader].delete(:trackers) # TODO: For backward compatibility with 0.3.0, will be removed in 0.5.0
+    # params[:downloader].delete(:trackers) # Was for backward compatibility with 0.3.0, removed in 0.5.0
+    # TODO: perhaps select only certain keys from :downloader params
     
-    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
-    params[:downloader][:name] = params[:downloader][:files].to_s.split(/[\r\n]/).first if params[:downloader][:name].blank?
+    new_files = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
+    
+    params[:downloader][:files_digest] = Digest::SHA1.hexdigest(new_files)
+    params[:downloader].delete(:files)
+    
+    params[:downloader][:name] = new_files.split(/[\r\n]/).first if params[:downloader][:name].blank?
     params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
     
     params[:downloader][:download_token] = Digest::SHA1.hexdigest(Time.now.usec.to_s)
     
-    @downloader = current_user.downloaders.find_by_files_and_folder(params[:downloader][:files], params[:downloader][:folder])
+    @downloader = current_user.downloaders.find_by_files_digest_and_folder_and_external_user_id(params[:downloader][:files_digest], params[:downloader][:folder], params[:downloader][:external_user_id])
     
     if @downloader
       @downloader.generate_simple_executable! if @downloader.simple_executable_file_url.blank?
@@ -105,6 +99,7 @@ class DownloadersController < ApplicationController
 
       respond_to do |format|
         if @downloader.save
+          @downloader.generate_segments!(new_files, params[:downloader][:folder])
           @downloader.generate_simple_executable!
           format.html { redirect_to(@downloader, :notice => 'Downloader was successfully created.') }
           format.xml  { render :xml => @downloader.to_xml(:methods => [:file_count, :simple_executable_file_url], :except => [:simple_executable_file]), :status => :created, :location => @downloader }
@@ -117,11 +112,13 @@ class DownloadersController < ApplicationController
   end
 
   def update
-    params[:downloader][:files] = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
+    new_files = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
+    params[:downloader][:files_digest] = Digest::SHA1.hexdigest(new_files)
+    params[:downloader].delete(:files)
     
     @downloader = Downloader.find_by_id(params[:id])
     
-    same_files = (params[:downloader][:files] == @downloader.files and params[:downloader][:folder] == @downloader.folder) if @downloader
+    same_files = (params[:downloader][:files_digest] == @downloader.files_digest and params[:downloader][:folder] == @downloader.folder) if @downloader
     
     respond_to do |format|
       if @downloader.update_attributes(params[:downloader])

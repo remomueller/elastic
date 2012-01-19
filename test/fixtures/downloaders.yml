@@ -3,7 +3,8 @@
 one:
   user: admin
   name: MyString
-  files: MyText
+  # files: file_deleted.txt
+  files_digest: <%= Digest::SHA1.hexdigest('') %> # Only includes files that actually exist
   comments: MyText
   folder: folder_one
   download_token: abc
@@ -11,7 +12,8 @@ one:
 two:
   user: admin
   name: MyString
-  files: "test_file.txt"
+  # files: "test_file.txt"
+  files_digest: <%= Digest::SHA1.hexdigest('test_file.txt') %>
   comments: MyText
   folder: test
   download_token: abc2
@@ -19,7 +21,8 @@ two:
 three:
   user: admin
   name: MyString
-  files: "missing.txt"
+  # files: "missing.txt"
+  files_digest: <%= Digest::SHA1.hexdigest('missing.txt') %>
   comments: MyText
   folder: test
   download_token: abcmissing
@@ -28,22 +31,25 @@ no_files:
   user: admin
   name: No Files
   # files:
+  files_digest: <%= Digest::SHA1.hexdigest('') %>
   comments: No Files Comment
   folder: test
   download_token: nofiles
 
 two_files:
   user: admin
-  name: No Files
-  files: "FileOne.txt\nFileTwo.txt"
-  comments: No Files Comment
+  name: Two Files
+  # files: "checksum.txt\ntest_file.txt"
+  files_digest: <%= Digest::SHA1.hexdigest("checksum.txt\ntest_file.txt") %>
+  comments: Two Files Comment
   folder: test
-  download_token: nofiles
+  download_token: two_files
 
 with_executable:
   user: admin
   name: With Executable
-  files: "checksum.txt"
+  # files: "checksum.txt"
+  files_digest: <%= Digest::SHA1.hexdigest('checksum.txt') %>
   comments: Fake Executable for testing
   folder: test
   download_token: fake

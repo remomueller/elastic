@@ -8,6 +8,10 @@ class Downloader < ActiveRecord::Base
 
   # Model Relationships
   belongs_to :user
+  has_many :downloader_segments
+  has_many :segments, through: :downloader_segments
+
+  attr_reader :files
   
   mount_uploader :simple_executable_file, FileUploader
   
@@ -16,7 +20,8 @@ class Downloader < ActiveRecord::Base
   end
   
   def file_count
-    self.files.to_s.split(/[\r\n]/).select{|i| not i.blank?}.size
+    # self.files.to_s.split(/[\r\n]/).select{|i| not i.blank?}.size
+    self.downloader_segments.size
   end
 
   def self.filter_files(params_files = '', params_folder = '')
@@ -36,14 +41,14 @@ class Downloader < ActiveRecord::Base
     return { base: available_files.compact.uniq.sort.join("\n"), path: updated_file_locations.compact.uniq.sort }
   end
 
-  def generate_checksums!
-    updated_file_locations = Downloader.filter_files(self.files, self.folder)[:path]
-    updated_file_locations.each do |file_location|
-      logger.debug "Searching for CHECKSUM!: #{file_location}"
-      segment = Segment.find_or_create_by_files(file_location)
-      segment.generate_checksum! if segment.checksum.blank?
-    end
-  end
+  # def generate_checksums!
+  #   updated_file_locations = Downloader.filter_files(self.files, self.folder)[:path]
+  #   updated_file_locations.each do |file_location|
+  #     logger.debug "Searching for CHECKSUM!: #{file_location}"
+  #     # TODO find by file path
+  #     segment = Segment.find_or_create_by_file_path(file_location)
+  #   end
+  # end
   
   # `-- <rails_root>
   #     |-- ...
@@ -59,7 +64,7 @@ class Downloader < ActiveRecord::Base
   
   
   def generate_simple_executable!
-    self.generate_checksums!
+    # self.generate_checksums!
     
     if ENV['OS'] == "Windows_NT" or true
       # begin
@@ -104,5 +109,13 @@ class Downloader < ActiveRecord::Base
       #   logger.debug "Exception: #{e.inspect}"
       # end
     end
-  end  
+  end
+  
+  def generate_segments!(new_files, new_folder)
+    updated_file_locations = Downloader.filter_files(new_files, new_folder)[:path]
+    updated_file_locations.each do |file_location|
+      segment = Segment.find_or_create_by_file_path(file_location)
+      self.segments << segment unless self.segments.pluck('segments.id').include?(segment.id)
+    end
+  end
 end

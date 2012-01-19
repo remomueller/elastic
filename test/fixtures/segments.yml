@@ -3,20 +3,21 @@
 one:
   user: valid
   name: MyString
-  files: MyText
+  file_path: <%= Rails.root %>/tmp/symbolic/folder_one/file_deleted.txt
 
 two:
   user: valid
   name: MyString
-  files: MyText
+  file_path: MyText2
 
-three:
+test_file:
   user: admin
   name: Actual File
-  files: <%= Rails.root %>/tmp/symbolic/test/test_file.txt
+  file_path: <%= Rails.root %>/tmp/symbolic/test/test_file.txt
   checksum: a748f32489958e3c31f3ea568dfc0201
 
-generate_checksum:
+checksum:
   user: valid
   name: Generate Checksum
-  files: <%= Rails.root %>/tmp/symbolic/test/checksum.txt
+  file_path: <%= Rails.root %>/tmp/symbolic/test/checksum.txt
+  

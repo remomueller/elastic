@@ -1,0 +1,32 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  downloader: one
+  segment: one
+  checksum_count: 0
+  download_count: 0
+
+two_files_checksum:
+  downloader: two_files
+  segment: checksum
+  checksum_count: 0
+  download_count: 0
+
+two_files_test_file:
+  downloader: two_files
+  segment: test_file
+  checksum_count: 0
+  download_count: 0
+
+test_file_link:
+  downloader: two
+  segment: test_file
+  checksum_count: 0
+  download_count: 0
+
+with_executable_checksum:
+  downloader: with_executable
+  segment: checksum
+  checksum_count: 0
+  download_count: 0
+  

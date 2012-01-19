@@ -4,7 +4,7 @@
   <tr>
     <th>User</th>
     <th>Name</th>
-    <th>Files</th>
+    <th>File Path</th>
     <th></th>
     <th></th>
   </tr>
@@ -13,7 +13,7 @@
   <tr>
     <td><%= segment.user_id %></td>
     <td><%= link_to segment.name, segment %></td>
-    <td><%= link_to segment.files, segment %></td>
+    <td><%= link_to segment.file_path, segment %></td>
     <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
     <td><%= link_to 'Destroy', segment, confirm: 'Are you sure?', method: :delete %></td>
   </tr>

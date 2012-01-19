@@ -12,6 +12,7 @@ class DownloaderTest < ActiveSupport::TestCase
     test_executable = File.join(Rails.root, 'tmp', 'files', "simple_download_#{downloaders(:with_executable).to_param}.exe")
     File.open(test_executable, 'w') {|f| f.write('test_executable') }
     downloaders(:with_executable).generate_simple_executable!
+    # TODO!
   end
   
 end
