@@ -24,6 +24,30 @@
 </p>
 
 <p>
+  <b>External User ID:</b>
+  <%= @downloader.external_user_id %>
+</p>
+
+<p>
+  <b>Download Count</b>
+  <%= @downloader.downloader_segments.pluck(:download_count).sum %>
+</p>
+
+<p>
+  <b>Checksum Count</b>
+  <%= @downloader.downloader_segments.pluck(:checksum_count).sum %>
+</p>
+
+<p>
+  <b>Downloader Segments <%= @downloader.downloader_segments.size %>:</b>
+  <ul>
+  <%= @downloader.downloader_segments.order('download_count DESC').each do |downloader_segment| %>
+    <li>D#: <%= downloader_segment.download_count %> C# <%= downloader_segment.checksum_count %> <%= link_to downloader_segment.segment.file_path.gsub(File.join(Rails.root, 'tmp', 'symbolic', @downloader.folder) + '/', ''), downloader_segment.segment if downloader_segment.segment %></li>
+  <% end %>
+  </ul>
+</p>
+
+<p>
   <b>Comments:</b>
   <%= @downloader.comments %>
 </p>

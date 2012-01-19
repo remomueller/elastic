@@ -13,5 +13,24 @@
   <%= @segment.file_path %>
 </p>
 
+<p>
+  <b>Download Count</b>
+  <%= @segment.downloader_segments.pluck(:download_count).sum %>
+</p>
+
+<p>
+  <b>Checksum Count</b>
+  <%= @segment.downloader_segments.pluck(:checksum_count).sum %>
+</p>
+
+<p>
+  <b>Downloader <%= @segment.downloaders.size %>:</b>
+  <ul>
+  <%= @segment.downloaders.each do |downloader| %>
+    <%= link_to downloader.name, downloader %>
+  <% end %>
+  </ul>
+</p>
+
 <%= link_to 'Edit', edit_segment_path(@segment) %> |
 <%= link_to 'Back', segments_path %>

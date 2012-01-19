@@ -6,6 +6,8 @@
     <th>Name</th>
     <th>Files</th>
     <th>Simple Executable file</th>
+    <th>Download Count</th>
+    <th>Checksum Count</th>
     <th></th>
     <th></th>
   </tr>
@@ -15,6 +17,8 @@
       <td><%= link_to downloader.name, downloader %></td>
       <td><%= downloader.file_count %></td>
       <td><%= link_to File.basename(downloader.simple_executable_file.path), SITE_URL + downloader.simple_executable_file.url, :class => 'noicon' if downloader.simple_executable_file and downloader.simple_executable_file.url %></td>
+      <td><%= downloader.downloader_segments.pluck(:download_count).sum %></td>
+      <td><%= downloader.downloader_segments.pluck(:checksum_count).sum %></td>
       <td><%= link_to 'Edit', edit_downloader_path(downloader) %></td>
       <td><%= link_to 'Destroy', downloader, :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
