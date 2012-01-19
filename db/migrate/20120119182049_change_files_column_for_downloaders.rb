@@ -1,9 +1,11 @@
 class ChangeFilesColumnForDownloaders < ActiveRecord::Migration
   def up
-    change_column :downloaders, :files, :string, limit: 40, default: "", null: false
+    remove_column :downloaders, :files
+    add_column :downloaders, :files_digest, :string, limit: 40, default: "", null: false
   end
 
   def down
-    change_column :downloaders, :files, :text
+    add_column :downloaders, :files, :text
+    remove_column :downloaders, :files_digest
   end
 end
