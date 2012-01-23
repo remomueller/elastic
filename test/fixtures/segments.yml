@@ -20,4 +20,3 @@ checksum:
   user: valid
   name: Generate Checksum
   file_path: <%= Rails.root %>/tmp/symbolic/test/checksum.txt
-  

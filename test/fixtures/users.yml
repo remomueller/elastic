@@ -9,21 +9,6 @@ valid:
   email_notifications: {}
   users_per_page: 10
   email: valid@example.com
-  encrypted_password: MyString
-  reset_password_token: ResetTokenOne
-  remember_created_at: 2011-02-23
-  sign_in_count: 0
-  current_sign_in_at: 2011-02-23
-  last_sign_in_at: 2011-02-23
-  current_sign_in_ip: MyString
-  last_sign_in_ip: MyString
-  confirmation_token: ConfirmationTokenOne
-  confirmed_at: 2011-02-23
-  confirmation_sent_at: 2011-02-23
-  failed_attempts: 0
-  unlock_token: UnlockTokenOne
-  locked_at: 2011-02-23
-  authentication_token: MyString
 
 two:
   first_name: MyString
@@ -34,22 +19,7 @@ two:
   email_notifications: { send_email: false }
   users_per_page: 10
   email: EmailTwo
-  encrypted_password: MyString
-  reset_password_token: ResetTokenTwo
-  remember_created_at: 2011-02-23
-  sign_in_count: 0
-  current_sign_in_at: 2011-02-23
-  last_sign_in_at: 2011-02-23
-  current_sign_in_ip: MyString
-  last_sign_in_ip: MyString
-  confirmation_token: ConfirmationTokenTwo
-  confirmed_at: 2011-02-23
-  confirmation_sent_at: 2011-02-23
-  failed_attempts: 0
-  unlock_token: UnlockTokenTwo
-  locked_at: 2011-02-23
-  authentication_token: MyString
-  
+
 admin:
   first_name: MyString
   last_name: MyString
@@ -59,21 +29,6 @@ admin:
   email_notifications: {}
   users_per_page: 10
   email: admin@example.com
-  encrypted_password: MyString
-  reset_password_token: ResetTokenThree
-  remember_created_at: 2011-02-23
-  sign_in_count: 0
-  current_sign_in_at: 2011-02-23
-  last_sign_in_at: 2011-02-23
-  current_sign_in_ip: MyString
-  last_sign_in_ip: MyString
-  confirmation_token: ConfirmationTokenThree
-  confirmed_at: 2011-02-23
-  confirmation_sent_at: 2011-02-23
-  failed_attempts: 0
-  unlock_token: UnlockTokenThree
-  locked_at: 2011-02-23
-  authentication_token: MyString
 
 pending:
   first_name: MyString
@@ -84,21 +39,6 @@ pending:
   email_notifications: {}
   users_per_page: 10
   email: pending@example.com
-  encrypted_password: MyString
-  reset_password_token: ResetTokenFour
-  remember_created_at: 2011-02-23
-  sign_in_count: 0
-  current_sign_in_at: 2011-02-23
-  last_sign_in_at: 2011-02-23
-  current_sign_in_ip: MyString
-  last_sign_in_ip: MyString
-  confirmation_token: ConfirmationTokenFour
-  confirmed_at: 2011-02-23
-  confirmation_sent_at: 2011-02-23
-  failed_attempts: 0
-  unlock_token: UnlockTokenFour
-  locked_at: 2011-02-23
-  authentication_token: MyString
 
 deleted:
   first_name: MyString
@@ -109,18 +49,3 @@ deleted:
   email_notifications: {}
   users_per_page: 10
   email: deleted@example.com
-  encrypted_password: MyString
-  reset_password_token: ResetTokenFive
-  remember_created_at: 2011-02-23
-  sign_in_count: 0
-  current_sign_in_at: 2011-02-23
-  last_sign_in_at: 2011-02-23
-  current_sign_in_ip: MyString
-  last_sign_in_ip: MyString
-  confirmation_token: ConfirmationTokenFive
-  confirmed_at: 2011-02-23
-  confirmation_sent_at: 2011-02-23
-  failed_attempts: 0
-  unlock_token: UnlockTokenFive
-  locked_at: 2011-02-23
-  authentication_token: MyString

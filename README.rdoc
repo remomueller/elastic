@@ -19,11 +19,11 @@ This readme assumes the following installation directory: /var/www/elastic
   bundle install
 
 Install default configuration files for database connection, email server connection, server url, and application name.
-  
+
   ruby lib/initial_setup.rb
 
   bundle exec rake db:migrate RAILS_ENV=production
-  
+
   bundle exec rake assets:precompile RAILS_ENV=production
 
 Run Rails Server (or use Apache or nginx)
@@ -35,7 +35,7 @@ Open a browser and go to: http://localhost
 All done!
 
 == Contributing to Notes
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 * Fork the project
@@ -46,5 +46,5 @@ All done!
 
 == Copyright
 
-Copyright (c) 2012 Remo Mueller. See LICENSE for further details.
+Copyright (c) 2012 Remo Mueller. See {LICENSE}[https://github.com/remomueller/elastic/blob/master/LICENSE] for further details.
 

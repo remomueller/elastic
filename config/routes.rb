@@ -21,4 +21,5 @@ Elastic::Application.routes.draw do
 
   root to: "downloaders#index"
 
+  # See how all your routes lay out with "rake routes"
 end

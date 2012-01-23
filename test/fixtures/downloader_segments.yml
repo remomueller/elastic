@@ -29,4 +29,3 @@ with_executable_checksum:
   segment: checksum
   checksum_count: 0
   download_count: 0
-  
