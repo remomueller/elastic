@@ -1,5 +1,9 @@
 == 0.5.2
 
+* Enhancements
+  * Update to Rails 3.2.2 and Contour 0.10.2 with Contour-Minimalist theme
+  * External User ID now shown on downloaders index
+
 == 0.5.1
 
 * Refactoring

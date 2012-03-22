@@ -28,5 +28,5 @@ class Segment < ActiveRecord::Base
     end
     self.checksum
   end
-  
+
 end

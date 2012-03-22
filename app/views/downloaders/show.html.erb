@@ -1,57 +1,63 @@
-<p>
-  <b>Creator:</b>
-  <%= link_to @downloader.user.name, @downloader.user %>
-</p>
+<% @title = "Downloader: #{@downloader.name}" %>
+<h1><%= @title %></h1>
 
-<p>
-  <b>Name:</b>
-  <%= @downloader.name %>
-</p>
+<% if current_user.all_downloaders.include?(@downloader) %>
+  <%= link_to image_tag('gentleface/16/doc_edit.png', alt: '') + "Edit Downloader", edit_downloader_path(@downloader), class: 'button' %>
+  <%= link_to image_tag('gentleface/16/doc_delete.png', alt: '') + "Delete Downloader", @downloader, confirm: "Are you sure you want to delete Downloader #{@downloader.name}?", method: :delete, class: 'button negative' %>
+<% end %>
+<%= link_to image_tag('gentleface/16/folder_open.png', alt: '') + "View All Downloaders", downloaders_path, class: 'button' %>
 
-<p>
-  <b>Files Digest:</b>
-  <pre><%= @downloader.files_digest %></pre>
-</p>
+<div style="clear:both"></div>
 
-<p>
-  <b>Simple Executable file:</b>
-  <%= link_to File.basename(@downloader.simple_executable_file.path), SITE_URL + @downloader.simple_executable_file.url, :class => 'noicon' if @downloader.simple_executable_file and @downloader.simple_executable_file.url %>
-</p>
+<fieldset>
+  <br />
 
-<p>
-  <b>Download token:</b>
-  <%= @downloader.download_token %>
-</p>
+  <p>
+    <b>Creator:</b>
+    <%= link_to @downloader.user.name, @downloader.user %>
+  </p>
 
-<p>
-  <b>External User ID:</b>
-  <%= @downloader.external_user_id %>
-</p>
+  <p>
+    <b>Files Digest:</b>
+    <pre><%= @downloader.files_digest %></pre>
+  </p>
 
-<p>
-  <b>Download Count</b>
-  <%= @downloader.downloader_segments.pluck(:download_count).sum %>
-</p>
+  <p>
+    <b>Simple Executable file:</b>
+    <%= link_to File.basename(@downloader.simple_executable_file.path), SITE_URL + @downloader.simple_executable_file.url, :class => 'noicon' if @downloader.simple_executable_file and @downloader.simple_executable_file.url %>
+  </p>
 
-<p>
-  <b>Checksum Count</b>
-  <%= @downloader.downloader_segments.pluck(:checksum_count).sum %>
-</p>
+  <p>
+    <b>Download token:</b>
+    <%= @downloader.download_token %>
+  </p>
 
-<p>
-  <b>Downloader Segments [<%= @downloader.downloader_segments.size %>]:</b>
-  <ul>
-  <% @downloader.downloader_segments.order('download_count DESC').each do |downloader_segment| %>
-    <li>D#: <%= downloader_segment.download_count %> C# <%= downloader_segment.checksum_count %> <%= link_to downloader_segment.segment.file_path.gsub(File.join(Rails.root, 'tmp', 'symbolic', @downloader.folder) + '/', ''), downloader_segment.segment if downloader_segment.segment %></li>
-  <% end %>
-  </ul>
-</p>
+  <p>
+    <b>External User ID:</b>
+    <%= @downloader.external_user_id %>
+  </p>
 
-<p>
-  <b>Comments:</b>
-  <%= @downloader.comments %>
-</p>
+  <p>
+    <b>Download Count</b>
+    <%= @downloader.downloader_segments.pluck(:download_count).sum %>
+  </p>
 
+  <p>
+    <b>Checksum Count</b>
+    <%= @downloader.downloader_segments.pluck(:checksum_count).sum %>
+  </p>
 
-<%= link_to 'Edit', edit_downloader_path(@downloader) %> |
-<%= link_to 'Back', downloaders_path %>
+  <p>
+    <b>Downloader Segments [<%= @downloader.downloader_segments.size %>]:</b>
+    <ul>
+    <% @downloader.downloader_segments.order('download_count DESC').each do |downloader_segment| %>
+      <li>D#: <%= downloader_segment.download_count %> C# <%= downloader_segment.checksum_count %> <%= link_to downloader_segment.segment.file_path.gsub(File.join(Rails.root, 'tmp', 'symbolic', @downloader.folder) + '/', ''), downloader_segment.segment if downloader_segment.segment %></li>
+    <% end %>
+    </ul>
+  </p>
+
+  <p>
+    <b>Comments:</b>
+    <%= @downloader.comments %>
+  </p>
+</fieldset>

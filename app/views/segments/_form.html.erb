@@ -11,19 +11,25 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :user_id %><br />
-    <%= f.number_field :user_id %>
-  </div>
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :file_path %><br />
-    <%= f.text_area :file_path %>
-  </div>
+  <fieldset>
+    <legend><%= @title %></legend>
+    <div class="field">
+      <%= f.label :user_id %><br />
+      <%= f.number_field :user_id %>
+    </div>
+    <div class="field">
+      <%= f.label :name %><br />
+      <%= f.text_field :name %>
+    </div>
+    <div class="field">
+      <%= f.label :file_path %><br />
+      <%= f.text_area :file_path %>
+    </div>
+  </fieldset>
   <div class="actions">
-    <%= f.submit %>
+    <% form_name = @segment.new_record? ? 'new_segment' : "edit_segment_#{@segment.id}" %>
+    <%= link_to_function image_tag('gentleface/16/checkmark.png', alt: '') + (@segment.new_record? ? "Create Segment" : "Update Segment"), "$('##{form_name}').submit();", class: "button positive" %>
+    <%= cancel %>
+    <br />
   </div>
 <% end %>

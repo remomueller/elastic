@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   # Model Relationships
   has_many :authentications
   has_many :downloaders, conditions: { deleted: false }
+  has_many :segments
 
   # User Methods
 
@@ -34,6 +35,14 @@ class User < ActiveRecord::Base
       Downloader.current
     else
       self.downloaders
+    end
+  end
+
+  def all_segments
+    if self.system_admin?
+      Segment.current
+    else
+      self.segments
     end
   end
 

@@ -11,9 +11,9 @@
 /**************************************
 - black		#000
 - white		#fff
-- brigham logo blue        #0E7799  
+- brigham logo blue        #0E7799
 - brigham link blue       #057080
-- brigham link gray   
+- brigham link gray
 
 - brigham dark blue   #094E63
 - brigham light blue  #CDEDF7
@@ -27,3 +27,19 @@
 /**************************************/
 /*            MAIN CONTENT            */
 /**************************************/
+
+span.selected {
+  background-color: #404040;
+  color: white;
+  padding: 3px 5px;
+
+  border: 1px solid #bbb;
+  -moz-border-radius: 3px; /* Mozilla */
+  -webkit-border-radius: 3px; /* Webkit */
+  border-radius: 3px;
+}
+
+/* TODO: To be fixed in Contour */
+table {
+  margin-bottom: 0;
+}

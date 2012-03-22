@@ -1,36 +1,44 @@
-<p>
-  <b>User:</b>
-  <%= @segment.user_id %>
-</p>
+<% @title = "Segment: #{@segment.name}" %>
+<h1><%= @title %></h1>
 
-<p>
-  <b>Name:</b>
-  <%= @segment.name %>
-</p>
+<% if current_user.all_segments.include?(@segment) %>
+  <%= link_to image_tag('gentleface/16/doc_edit.png', alt: '') + "Edit Segment", edit_segment_path(@segment), class: 'button' %>
+  <%= link_to image_tag('gentleface/16/doc_delete.png', alt: '') + "Delete Segment", @segment, confirm: "Are you sure you want to delete Segment #{@segment.name}?", method: :delete, class: 'button negative' %>
+<% end %>
+<%= link_to image_tag('gentleface/16/folder_open.png', alt: '') + "View All Segments", segments_path, class: 'button' %>
 
-<p>
-  <b>File Path:</b>
-  <%= @segment.file_path %>
-</p>
+<div style="clear:both"></div>
 
-<p>
-  <b>Download Count</b>
-  <%= @segment.downloader_segments.pluck(:download_count).sum %>
-</p>
+<fieldset>
+  <br />
 
-<p>
-  <b>Checksum Count</b>
-  <%= @segment.downloader_segments.pluck(:checksum_count).sum %>
-</p>
 
-<p>
-  <b>Downloaders [<%= @segment.downloaders.size %>]:</b>
-  <ul>
-  <% @segment.downloaders.each do |downloader| %>
-    <%= link_to downloader.name, downloader %>
-  <% end %>
-  </ul>
-</p>
+  <p>
+    <b>User:</b>
+    <%= @segment.user_id %>
+  </p>
 
-<%= link_to 'Edit', edit_segment_path(@segment) %> |
-<%= link_to 'Back', segments_path %>
+  <p>
+    <b>File Path:</b>
+    <%= @segment.file_path %>
+  </p>
+
+  <p>
+    <b>Download Count</b>
+    <%= @segment.downloader_segments.pluck(:download_count).sum %>
+  </p>
+
+  <p>
+    <b>Checksum Count</b>
+    <%= @segment.downloader_segments.pluck(:checksum_count).sum %>
+  </p>
+
+  <p>
+    <b>Downloaders [<%= @segment.downloaders.size %>]:</b>
+    <ul>
+    <% @segment.downloaders.each do |downloader| %>
+      <%= link_to downloader.name, downloader %>
+    <% end %>
+    </ul>
+  </p>
+</fieldset>

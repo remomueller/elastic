@@ -1,27 +1,29 @@
 <div style="clear:both"></div>
 
-<table style="width:100%">
-  <tr>
-    <th>User</th>
-    <th>Name</th>
-    <th>File Path</th>
-    <th>Download Count</th>
-    <th>Checksum Count</th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="frame">
+  <table style="width:100%">
+    <tr>
+      <th>User</th>
+      <th>Name</th>
+      <th>File Path</th>
+      <th>Download Count</th>
+      <th>Checksum Count</th>
+      <th></th>
+      <th></th>
+    </tr>
 
-<% @segments.each do |segment| %>
-  <tr>
-    <td><%= segment.user_id %></td>
-    <td><%= link_to segment.name, segment %></td>
-    <td><%= link_to segment.file_path, segment %></td>
-    <td><%= segment.downloader_segments.pluck(:download_count).sum %></td>
-    <td><%= segment.downloader_segments.pluck(:checksum_count).sum %></td>
-    <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
-    <td><%= link_to 'Destroy', segment, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
-<% end %>
-</table>
+  <% @segments.each do |segment| %>
+    <tr>
+      <td><%= segment.user_id %></td>
+      <td><%= link_to segment.name, segment %></td>
+      <td><%= link_to segment.file_path, segment %></td>
+      <td><%= segment.downloader_segments.pluck(:download_count).sum %></td>
+      <td><%= segment.downloader_segments.pluck(:checksum_count).sum %></td>
+      <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
+      <td><%= link_to 'Destroy', segment, confirm: 'Are you sure?', method: :delete %></td>
+    </tr>
+  <% end %>
+  </table>
+</div>
 
 <center><%= paginate @segments %></center>
