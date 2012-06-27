@@ -1,18 +1,36 @@
 <% @title = "My Settings" %>
-<h1><%= @title %></h1>
+<div class="page-header">
+  <h1><%= @title %></h1>
+</div>
 
-<%= form_tag update_settings_user_path(current_user), :method => :post, id: 'email_settings' do %>
-  <fieldset>
-    <legend>Email Notifications</legend>
-    <div class="field">
-      <label>Emails</label><br />
-      <%= check_box_tag 'email[send_email]', '1', current_user.email_on?(:send_email) %> <%= information('Receive Emails') %>
+<%= form_tag update_settings_user_path(current_user), :method => :post, id: 'email_settings', class: 'form-horizontal' do %>
+  <div class="control-group">
+    <div class="controls">
+      <%= check_box_tag 'email[send_email]', '1', current_user.email_on?(:send_email) %> <%= 'Receive Emails' %>
     </div>
-  </fieldset>
-
-  <div class="actions">
-    <% form_name = "email_settings" %>
-    <%= link_to_function image_tag('gentleface/16/checkmark.png', :alt => '') + "Save Settings", "$('##{form_name}').submit();", :class => "button positive" %>
-  	<br />
   </div>
+
+  <div class="form-actions">
+    <% form_name = "email_settings" %>
+    <%= link_to "Save Settings", '#', class: 'btn btn-primary', data: { object: 'settings-save', target: "##{form_name}" } %>
+  </div>
+<% end %>
+
+<%= javascript_tag do %>
+  window.$isDirty = false;
+  var msg = 'You haven\'t saved your changes.';
+
+  $(document).ready(function(){
+    $(':input').change(function(){
+        if(!window.$isDirty){
+            window.$isDirty = true;
+        }
+    });
+
+    window.onbeforeunload = function(el){
+        if(window.$isDirty){
+            return msg;
+        }
+    };
+  });
 <% end %>

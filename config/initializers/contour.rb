@@ -27,6 +27,7 @@ Contour.setup do |config|
     {
       name: 'current_user.name', eval: true, display: 'signed_in', path: 'user_path(current_user)', position: 'right',
       links: [{ html: '"<div class=\"small\" style=\"color:#bbb\">"+current_user.email+"</div>"', eval: true },
+              { name: 'Settings', path: 'settings_path' },
               { name: 'Authentications', path: 'authentications_path', condition: 'not PROVIDERS.blank?' },
               { divider: true },
               { name: 'Logout', path: 'destroy_user_session_path' }]

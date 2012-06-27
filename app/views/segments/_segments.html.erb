@@ -20,7 +20,7 @@
       <td><%= segment.downloader_segments.pluck(:download_count).sum %></td>
       <td><%= segment.downloader_segments.pluck(:checksum_count).sum %></td>
       <td>
-        <%= link_to 'Edit', edit_segment_path(segment) %>
+        <%= link_to 'Edit', edit_segment_path(segment), class: 'btn btn-mini' %>
         <%= link_to 'Destroy', segment, :method => :delete, class: 'btn btn-mini btn-danger', data: { confirm: "Are you sure you want to delete Segment #{segment.name}?" } %>
     </tr>
   <% end %>

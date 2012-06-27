@@ -25,4 +25,8 @@ module ApplicationHelper
       past_time.strftime("on %b %d, %Y at %I:%M %p")
     end
   end
+
+  def simple_check(checked)
+    image_tag("gentleface/16/#{checked ? 'checkbox_checked' : 'checkbox_unchecked'}.png", alt: '', style: 'vertical-align:text-bottom')
+  end
 end

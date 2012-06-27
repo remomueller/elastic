@@ -1,30 +1,24 @@
 <% @title = "User: #{@user.name}" %>
-<h1><%= @title %></h1>
+<div class="page-header">
+  <h1>
+    <%= @title %>
+    <% if current_user.system_admin? %>
+      <%= link_to "Edit User", edit_user_path(@user), class: 'btn btn-mini' %>
+      <%= link_to 'Delete User', @user, method: :delete, class: 'btn btn-mini btn-danger', data: { confirm: "Are you sure you want to delete User #{@user.name}?" } unless current_user == @user %>
+      <%= link_to "View Users", users_path, class: 'btn btn-mini' %>
+    <% end %>
+  </h1>
+</div>
 
-<% if current_user.system_admin? %>
-  <%= link_to image_tag('gentleface/16/doc_edit.png', :alt => '') + "Edit User", edit_user_path(@user), :class => 'button' %>
-  <%= link_to image_tag('gentleface/16/doc_delete.png', :alt => '') + 'Delete User', @user, :confirm => "Are you sure you want to delete User #{@user.name}?", :method => :delete, :class => 'button negative' unless current_user == @user %>
-<% end %>
-<%= link_to image_tag('gentleface/16/folder_open.png', :alt => '') + "View All Users", users_path, :class => 'button' %>
-
-<div style="clear:both"></div>
-<fieldset>
-  <br />
-
-  <p>
-    <b>Email:</b>
-    <%= @user.email %>
-  </p>
+<dl class="dl-horizontal">
+  <dt>Email</dt>
+  <dd><%= @user.email %></dd>
 
   <% if current_user.system_admin? %>
-    <p>
-      <b>Status:</b>
-      <%= @user.status %>
-    </p>
+    <dt>Status</dt>
+    <dd><%= @user.status %></dd>
 
-    <p>
-      <b>System Admin:</b>
-      <%= @user.system_admin? %>
-    </p>
+    <dt>System Admin</dt>
+    <dd><%= simple_check @user.system_admin? %></dd>
   <% end %>
-</fieldset>
+</dl>
