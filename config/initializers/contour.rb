@@ -33,16 +33,16 @@ Contour.setup do |config|
               { name: 'Logout', path: 'destroy_user_session_path' }]
     },
     {
-      name: 'About', display: 'not_signed_in', path: 'about_path', position: 'left'
-    },
-    {
       name: 'Downloaders', display: 'signed_in', path: 'downloaders_path', position: 'left'
     },
     {
       name: 'Segments', display: 'signed_in', path: 'segments_path', position: 'left', condition: 'current_user.system_admin?'
     },
     {
-      name: 'Users', display: 'signed_in', name: 'Users', path: 'users_path', position: 'left', condition: 'current_user.system_admin?'
+      name: 'Users', display: 'signed_in', path: 'users_path', position: 'left', condition: 'current_user.system_admin?'
+    },
+    {
+      name: 'About', display: 'always', path: 'about_path', position: 'left'
     }
   ]
 
