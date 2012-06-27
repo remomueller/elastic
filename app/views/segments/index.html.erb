@@ -1,15 +1,18 @@
 <% @title = 'Segments' %>
-<h1><%= @title %></h1>
+<div class="page-header">
+  <h1>
+    <%= @title %>
+    <%= link_to "Create Segment", new_segment_path, class: 'btn btn-primary btn-mini' if current_user.system_admin? %>
+  </h1>
+</div>
 
-<% if current_user.system_admin? %>
-  <%= link_to image_tag('gentleface/16/doc_new.png', :alt => '') + "Create New Segment", new_segment_path, :class => 'button positive' %>
-<% end %>
-
-<%= form_tag segments_path, :method => :get, :remote => true, id: "segments_search" do %>
+<%= form_tag segments_path, :method => :get, :remote => true, id: "segments_search", class: 'form-search' do %>
   <%= hidden_field_tag :order %>
-  Search <%= text_field_tag 'search', params[:search] %> <%= information %>
-  <div id="segments"><div style="clear:both"></div><br /><center><%= image_tag "ajax-loader.gif" %></center></div>
+  <%= text_field_tag 'search', params[:search], class: 'search-query' %>
+  <%= submit_tag 'Search', class: 'btn btn-primary' %>
 <% end %>
+
+<div id="segments"><center><%= image_tag "contour/ajax-loader.gif" %></center></div>
 
 <%= javascript_tag do %>
   $(function(){

@@ -1,15 +1,18 @@
 <% @title = 'Downloaders' %>
-<h1><%= @title %></h1>
+<div class="page-header">
+  <h1>
+    <%= @title %>
+    <%= link_to "Create Downloader", new_downloader_path, class: 'btn btn-primary btn-mini' if current_user.system_admin? %>
+  </h1>
+</div>
 
-<% if current_user.system_admin? %>
-  <%= link_to image_tag('gentleface/16/doc_new.png', :alt => '') + "Create New Downloader", new_downloader_path, :class => 'button positive' %>
-<% end %>
-
-<%= form_tag downloaders_path, :method => :get, :remote => true, id: "downloaders_search" do %>
+<%= form_tag downloaders_path, :method => :get, :remote => true, id: "downloaders_search", class: 'form-search' do %>
   <%= hidden_field_tag :order %>
-  Search <%= text_field_tag 'search', params[:search] %> <%= information %>
-  <div id="downloaders"><div style="clear:both"></div><br /><center><%= image_tag "ajax-loader.gif" %></center></div>
+  <%= text_field_tag 'search', params[:search], class: 'search-query' %>
+  <%= submit_tag 'Search', class: 'btn btn-primary' %>
 <% end %>
+
+<div id="downloaders"><center><%= image_tag "contour/ajax-loader.gif" %></center></div>
 
 <%= javascript_tag do %>
   $(function(){
