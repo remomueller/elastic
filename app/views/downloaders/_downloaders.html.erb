@@ -1,32 +1,34 @@
-<div style="clear:both"></div>
+<%= render partial: 'contour/layouts/per_page', locals: { type: 'downloaders' } %>
 
-<div class="frame">
-  <table style="width:100%">
+<table class="table table-striped table-bordered" style="width:100%">
+  <thead>
     <tr>
-      <th>User</th>
-      <th>Name</th>
-      <th>Files</th>
-      <th>Simple Executable file</th>
-      <th>Download Count</th>
-      <th>Checksum Count</th>
-      <th>External User ID</th>
-      <th></th>
-      <th></th>
+      <th style="white-space:nowrap">User</th>
+      <th style="white-space:nowrap">Name</th>
+      <th style="white-space:nowrap">Files</th>
+      <th style="white-space:nowrap">Simple Executable file</th>
+      <th style="white-space:nowrap">Download Count</th>
+      <th style="white-space:nowrap">Checksum Count</th>
+      <th style="white-space:nowrap">External User ID</th>
+      <th>Actions</th>
     </tr>
-    <% @downloaders.each do |downloader| %>
-      <tr>
-        <td><%= downloader.user_id %></td>
-        <td><%= link_to downloader.name, downloader %></td>
-        <td><%= downloader.file_count %></td>
-        <td><%= link_to File.basename(downloader.simple_executable_file.path), SITE_URL + downloader.simple_executable_file.url, :class => 'noicon' if downloader.simple_executable_file and downloader.simple_executable_file.url %></td>
-        <td><%= downloader.downloader_segments.pluck(:download_count).sum %></td>
-        <td><%= downloader.downloader_segments.pluck(:checksum_count).sum %></td>
-        <td><%= downloader.external_user_id %></td>
-        <td><%= link_to 'Edit', edit_downloader_path(downloader) %></td>
-        <td><%= link_to 'Destroy', downloader, :confirm => 'Are you sure?', :method => :delete %></td>
-      </tr>
-    <% end %>
-  </table>
-</div>
+  </thead>
+
+  <% @downloaders.each do |downloader| %>
+    <tr>
+      <td><%= downloader.user_id %></td>
+      <td><%= link_to downloader.name, downloader %></td>
+      <td><%= downloader.file_count %></td>
+      <td><%= link_to File.basename(downloader.simple_executable_file.path), SITE_URL + downloader.simple_executable_file.url, :class => 'noicon' if downloader.simple_executable_file and downloader.simple_executable_file.url %></td>
+      <td><%= downloader.downloader_segments.pluck(:download_count).sum %></td>
+      <td><%= downloader.downloader_segments.pluck(:checksum_count).sum %></td>
+      <td><%= downloader.external_user_id %></td>
+      <td>
+        <%= link_to 'Edit', edit_downloader_path(downloader), class: 'btn btn-mini' %>
+        <%= link_to 'Destroy', downloader, :method => :delete, class: 'btn btn-mini btn-danger', data: { confirm: "Are you sure you want to delete Downloader #{downloader.name}?" } %>
+      </td>
+    </tr>
+  <% end %>
+</table>
 
 <center><%= paginate @downloaders %></center>
