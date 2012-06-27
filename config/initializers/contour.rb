@@ -20,31 +20,28 @@ Contour.setup do |config|
   config.menu_items = [
     {
       name: 'Login', display: 'not_signed_in', path: 'new_user_session_path', position: 'right',
-      links: [{ name: 'Sign Up', path: 'new_user_registration_path' }]
+      links: [{ name: 'Sign Up', path: 'new_user_registration_path' },
+              { divider: true },
+              { authentications: true }]
     },
     {
       name: 'current_user.name', eval: true, display: 'signed_in', path: 'user_path(current_user)', position: 'right',
       links: [{ html: '"<div class=\"small\" style=\"color:#bbb\">"+current_user.email+"</div>"', eval: true },
-              { name: 'Settings', path: 'settings_path' },
               { name: 'Authentications', path: 'authentications_path', condition: 'not PROVIDERS.blank?' },
-              { html: "<br />" },
+              { divider: true },
               { name: 'Logout', path: 'destroy_user_session_path' }]
     },
     {
-      name: 'About', display: 'not_signed_in', path: 'about_path', position: 'left',
-      links: []
+      name: 'About', display: 'not_signed_in', path: 'about_path', position: 'left'
     },
     {
-      name: 'Downloaders', display: 'signed_in', path: 'downloaders_path', position: 'left',
-      links: []
+      name: 'Downloaders', display: 'signed_in', path: 'downloaders_path', position: 'left'
     },
     {
-      name: 'Segments', display: 'signed_in', path: 'segments_path', position: 'left', condition: 'current_user.system_admin?',
-      links: []
+      name: 'Segments', display: 'signed_in', path: 'segments_path', position: 'left', condition: 'current_user.system_admin?'
     },
     {
-      name: 'Users', display: 'signed_in', name: 'Users', path: 'users_path', position: 'left', condition: 'current_user.system_admin?',
-      links: []
+      name: 'Users', display: 'signed_in', name: 'Users', path: 'users_path', position: 'left', condition: 'current_user.system_admin?'
     }
   ]
 
@@ -54,4 +51,7 @@ Contour.setup do |config|
   # Enter the max number of items you want to see in the news feed.
   # config.news_feed_items = 5
 
+  # An array of hashes that specify additional fields to add to the sign up form
+  # An example might be [ { attribute: 'first_name', type: 'text_field' }, { attribute: 'last_name', type: 'text_field' } ]
+  config.sign_up_fields = [ { attribute: 'first_name', type: 'text_field' }, { attribute: 'last_name', type: 'text_field' } ]
 end
