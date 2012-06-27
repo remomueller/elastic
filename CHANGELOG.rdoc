@@ -1,5 +1,8 @@
 == 0.5.3
 
+* Enhancements
+  * Update to Ruby 1.9.3-p194
+
 == 0.5.2
 
 * Enhancements
