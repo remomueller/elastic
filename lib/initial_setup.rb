@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'erb'
 require 'digest/sha1'
+require 'securerandom'
 
 root_folder = FileUtils.pwd
 FileUtils.cd('lib/templates')
@@ -37,6 +38,6 @@ files.each do |folder_name, file_name|
       file_out.close()
     end
   else
-    puts "Error: Make sure you are running this ruby command from the lib directory!"
+    puts "Error: Make sure you are running this ruby command from the rails root directory!"
   end
 end
