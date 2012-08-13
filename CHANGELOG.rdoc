@@ -6,6 +6,7 @@
   * Email Changes:
     * Default application name is now added to the from: field for emails
     * Email subjects no longer include the application name
+  * About page reformatted to include links to github and contact information
 
 * Refactoring
   * Mass-assignment attr_accessible and params slicing implemented to leverage Rails 3.2.x configuration defaults

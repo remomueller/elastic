@@ -1,5 +1,40 @@
 <% @title = "About #{DEFAULT_APP_NAME}" %>
 
-<h1><%= @title %></h1>
+<div class="row" style="margin-top:54px">
+  <div class="span12">
+    <h1 class="about-title"><%= @title %></h1>
+    <p class="about-tagline">Visit our <%= link_to 'online community', ABOUT_PAGE_FORUM, target: '_blank' %> or contact us <%= mail_to ABOUT_PAGE_CONTACT, 'via email', target: '_blank', subject: "#{DEFAULT_APP_NAME} Question" %>.</p>
+    <p class="about-signup"><%= link_to 'Sign Me Up', new_user_registration_path, class: "btn btn-primary btn-large" %></p>
+  </div>
+</div>
 
-  <%= DEFAULT_APP_NAME %> is a web-based application.
+<hr class="soften">
+
+<p class="about-description"><%= DEFAULT_APP_NAME %> is a <%= link_to 'free to use*', 'https://github.com/remomueller/elastic/blob/master/LICENSE', rel: 'tooltip', data: { title: 'Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License' } %> and <%= link_to 'open source', 'https://github.com/remomueller/elastic', rel: 'tooltip', data: { title: 'Source code freely available on GitHub' } %> elastic file server.</p>
+
+<div class="row">
+  <div class="span4">
+    <h2 class="about-title">Downloaders</h2>
+    <ul>
+      <li>Specify a list of files and generate an easy downloader executable to download numerous files using secure tokens.</li>
+    </ul>
+  </div>
+  <div class="span4">
+    <h2 class="about-title">Segments</h2>
+    <ul>
+      <li>Track the number of files downloaded for each downloader file set.</li>
+    </ul>
+  </div>
+  <div class="span4">
+    <h2 class="about-title">JSON Web API</h2>
+    <ul>
+      <li>Generate new file downloads and secure tokens using the JSON Web API.</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="soften">
+
+<footer class="footer">
+  <p class="muted about-footer"><%= DEFAULT_APP_NAME %> Version <%= link_to Elastic::VERSION::STRING, "https://github.com/remomueller/elastic/tree/#{Elastic::VERSION::MAJOR}.#{Elastic::VERSION::MINOR}.#{Elastic::VERSION::TINY}" %></p>
+</footer>
