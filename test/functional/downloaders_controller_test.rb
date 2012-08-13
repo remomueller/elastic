@@ -7,7 +7,7 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should download file" do
-    get :download_file, id: downloaders(:two).to_param, download_token: 'abc2', file_path: 'test_file.txt'
+    get :download_file, id: downloaders(:two), download_token: 'abc2', file_path: 'test_file.txt'
     assert_not_nil assigns(:downloader)
     assert_not_nil assigns(:segment)
     assert_not_nil assigns(:downloader_segment)
@@ -17,7 +17,7 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should not download file and retrieve file checksum for missing segment" do
-    get :download_file, id: downloaders(:three).to_param, download_token: 'abcmissing', file_path: 'missing.txt', checksum: '1'
+    get :download_file, id: downloaders(:three), download_token: 'abcmissing', file_path: 'missing.txt', checksum: '1'
     assert_not_nil assigns(:downloader)
     assert_nil assigns(:segment)
     assert_nil assigns(:downloader_segment)
@@ -27,7 +27,7 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should download file and retrieve file checksum" do
-    get :download_file, id: downloaders(:two).to_param, download_token: 'abc2', file_path: 'test_file.txt', checksum: '1'
+    get :download_file, id: downloaders(:two), download_token: 'abc2', file_path: 'test_file.txt', checksum: '1'
     assert_not_nil assigns(:downloader)
     assert_not_nil assigns(:segment)
     assert_not_nil assigns(:downloader_segment)
@@ -38,7 +38,7 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should download file and retrieve file freshly generated checksum" do
-    get :download_file, id: downloaders(:with_executable).to_param, download_token: 'fake', file_path: 'checksum.txt', checksum: '1'
+    get :download_file, id: downloaders(:with_executable), download_token: 'fake', file_path: 'checksum.txt', checksum: '1'
     assert_not_nil assigns(:downloader)
     assert_not_nil assigns(:segment)
     assert_not_nil assigns(:downloader_segment)
@@ -49,7 +49,7 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should not download file that does not exist" do
-    get :download_file, id: @downloader.to_param, download_token: 'abc', file_path: 'file_deleted.txt'
+    get :download_file, id: @downloader, download_token: 'abc', file_path: 'file_deleted.txt'
     assert_not_nil assigns(:downloader)
     assert_not_nil assigns(:segment)
     assert_not_nil assigns(:downloader_segment)
@@ -60,7 +60,7 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should not download file that has an expired token" do
-    get :download_file, id: @downloader.to_param, download_token: 'expired_token', file_path: 'file_deleted.txt'
+    get :download_file, id: @downloader, download_token: 'expired_token', file_path: 'file_deleted.txt'
     assert_nil assigns(:downloader)
     assert_equal "No longer authorized to download this file", @response.body
     assert_equal 404, @response.status
@@ -91,7 +91,7 @@ class DownloadersControllerTest < ActionController::TestCase
                     target_file_name: 'downloader3'
     end
     assert_not_nil assigns(:downloader)
-    
+
     assert_equal 0, assigns(:downloader).downloader_segments.size
     assert_equal 0, assigns(:downloader).segments.size
 
@@ -103,7 +103,7 @@ class DownloadersControllerTest < ActionController::TestCase
       post :create, downloader: { files: "checksum.txt\nmissing.txt\ntest_file.txt", name: 'Download_3_Files', folder: 'test' }, target_file_name: 'downloader3', format: 'xml'
     end
     assert_not_nil assigns(:downloader)
-    
+
     assert_equal 3, assigns(:downloader).downloader_segments.size
     assert_equal 3, assigns(:downloader).segments.size
 
@@ -120,7 +120,7 @@ class DownloadersControllerTest < ActionController::TestCase
       post :create, downloader: { files: "checksum.txt\nmissing.txt\ntest_file.txt", name: 'Download_3_Files', folder: 'test' }, target_file_name: 'downloader3', format: 'json'
     end
     assert_not_nil assigns(:downloader)
-    
+
     assert_equal 3, assigns(:downloader).downloader_segments.size
     assert_equal 3, assigns(:downloader).segments.size
 
@@ -144,7 +144,7 @@ class DownloadersControllerTest < ActionController::TestCase
 
     assert_redirected_to downloader_path(assigns(:downloader))
   end
-  
+
   test "should not create downloader with blank name and files" do
     assert_difference('Downloader.count', 0) do
       post :create, downloader: { files: '', name: '', folder: 'folder' },
@@ -157,22 +157,22 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should show downloader" do
-    get :show, id: @downloader.to_param
+    get :show, id: @downloader
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @downloader.to_param
+    get :edit, id: @downloader
     assert_response :success
   end
 
   test "should update downloader" do
-    put :update, id: @downloader.to_param, downloader: { name: 'Updated Name', files: 'file_deleted.txt', folder: 'folder_one' }
+    put :update, id: @downloader, downloader: { name: 'Updated Name', files: 'file_deleted.txt', folder: 'folder_one' }
     assert_redirected_to downloader_path(assigns(:downloader))
   end
 
   test "should not update downloader with blank name" do
-    put :update, id: @downloader.to_param, downloader: { name: '', files: 'MyText', folder: 'folder_one' }
+    put :update, id: @downloader, downloader: { name: '', files: 'MyText', folder: 'folder_one' }
     assert_not_nil assigns(:downloader)
     assert_equal ["can't be blank"], assigns(:downloader).errors[:name]
     assert_equal 1, assigns(:downloader).errors.size
@@ -181,7 +181,7 @@ class DownloadersControllerTest < ActionController::TestCase
 
   test "should destroy downloader" do
     assert_difference('Downloader.count', -1) do
-      delete :destroy, id: @downloader.to_param
+      delete :destroy, id: @downloader
     end
 
     assert_redirected_to downloaders_path

@@ -9,7 +9,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should update settings and enable email" do
-    post :update_settings, id: users(:admin).to_param, email: { send_email: '1' }
+    post :update_settings, id: users(:admin), email: { send_email: '1' }
     users(:admin).reload # Needs reload to avoid stale object
     assert_equal true, users(:admin).email_on?(:send_email)
     assert_equal 'Email settings saved.', flash[:notice]
@@ -17,7 +17,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should update settings and disable email" do
-    post :update_settings, id: users(:admin).to_param, email: { send_email: '0' }
+    post :update_settings, id: users(:admin), email: { send_email: '0' }
     users(:admin).reload # Needs reload to avoid stale object
     assert_equal false, users(:admin).email_on?(:send_email)
     assert_equal 'Email settings saved.', flash[:notice]
@@ -39,34 +39,34 @@ class UsersControllerTest < ActionController::TestCase
   #   assert_difference('User.count') do
   #     post :create, user: @user.attributes
   #   end
-  # 
+  #
   #   assert_redirected_to user_path(assigns(:user))
   # end
 
   test "should show user" do
-    get :show, id: @user.to_param
+    get :show, id: @user
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @user.to_param
+    get :edit, id: @user
     assert_response :success
   end
 
   test "should update user" do
-    put :update, id: @user.to_param, user: @user.attributes
+    put :update, id: @user, user: @user.attributes
     assert_redirected_to user_path(assigns(:user))
   end
 
   test "should not update user with blank name" do
-    put :update, id: @user.to_param, user: { first_name: '', last_name: '' }
+    put :update, id: @user, user: { first_name: '', last_name: '' }
     assert_not_nil assigns(:user)
     assert_template 'edit'
   end
 
   test "should destroy user" do
     assert_difference('User.current.count', -1) do
-      delete :destroy, id: @user.to_param
+      delete :destroy, id: @user
     end
 
     assert_redirected_to users_path

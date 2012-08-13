@@ -1,5 +1,15 @@
 == 0.5.4
 
+* Enhancements
+  * Updated to Rails 3.2.8
+    * Removed deprecated use of update_attribute for Rails 4.0 compatibility
+
+* Refactoring
+  * Mass-assignment attr_accessible and params slicing implemented to leverage Rails 3.2.x configuration defaults
+
+* Testing
+  * Use ActionDispatch for Integration tests instead of ActionController
+
 == 0.5.3
 
 * Enhancements

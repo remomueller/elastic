@@ -1,4 +1,5 @@
 class Segment < ActiveRecord::Base
+  attr_accessible :name, :checksum, :file_path
 
   # Named Scopes
   scope :current, conditions: { }
@@ -18,7 +19,7 @@ class Segment < ActiveRecord::Base
     begin
       f = File.new(self.file_path)
       md5_checksum = Digest::MD5.hexdigest(f.read)
-      self.update_attribute :checksum, md5_checksum
+      self.update_attributes checksum: md5_checksum
     rescue StandardError, NoMemoryError => e
       logger.debug "Error #{e.inspect}"
       logger.debug "\nFile Size: #{(f || '').size}"

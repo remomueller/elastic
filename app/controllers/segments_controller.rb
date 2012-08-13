@@ -1,10 +1,10 @@
 class SegmentsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :check_system_admin
-  
+
   def index
     @order = params[:order].blank? ? 'segments.name' : params[:order]
-    segment_scope = Segment.current
+    segment_scope = current_user.all_viewable_segments
     @search_terms = params[:search].to_s.gsub(/[^0-9a-zA-Z]/, ' ').split(' ')
     @search_terms.each{|search_term| segment_scope = segment_scope.search(search_term) }
     segment_scope = segment_scope.order(@order)
@@ -17,7 +17,7 @@ class SegmentsController < ApplicationController
   end
 
   def show
-    @segment = Segment.find_by_id(params[:id])
+    @segment = current_user.all_viewable_segments.find_by_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +26,7 @@ class SegmentsController < ApplicationController
   end
 
   def new
-    @segment = Segment.new
+    @segment = current_user.segments.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,11 +35,11 @@ class SegmentsController < ApplicationController
   end
 
   def edit
-    @segment = Segment.find_by_id(params[:id])
+    @segment = current_user.all_segments.find_by_id(params[:id])
   end
 
   def create
-    @segment = Segment.new(params[:segment])
+    @segment = current_user.segments.new(post_params)
 
     respond_to do |format|
       if @segment.save
@@ -53,10 +53,10 @@ class SegmentsController < ApplicationController
   end
 
   def update
-    @segment = Segment.find_by_id(params[:id])
+    @segment = current_user.all_segments.find_by_id(params[:id])
 
     respond_to do |format|
-      if @segment.update_attributes(params[:segment])
+      if @segment.update_attributes(post_params)
         format.html { redirect_to @segment, notice: 'Segment was successfully updated.' }
         format.json { head :ok }
       else
@@ -67,12 +67,23 @@ class SegmentsController < ApplicationController
   end
 
   def destroy
-    @segment = Segment.find_by_id(params[:id])
-    @segment.destroy
+    @segment = current_user.all_segments.find_by_id(params[:id])
+    @segment.destroy if @segment
 
     respond_to do |format|
-      format.html { redirect_to segments_url }
+      format.html { redirect_to segments_path }
       format.json { head :ok }
     end
   end
+
+  private
+
+  def post_params
+    params[:segment] ||= {}
+
+    params[:segment].slice(
+      :name, :checksum, :file_path
+    )
+  end
+
 end

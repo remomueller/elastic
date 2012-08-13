@@ -5,10 +5,11 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :first_name, :last_name
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :first_name, :last_name,
+                  :email_notifications
 
+  # Callbacks
   after_create :notify_system_admins
-  before_update :status_activated
 
   STATUS = ["active", "denied", "inactive", "pending"].collect{|i| [i,i]}
   serialize :email_notifications, Hash
@@ -26,7 +27,7 @@ class User < ActiveRecord::Base
   # Model Relationships
   has_many :authentications
   has_many :downloaders, conditions: { deleted: false }
-  has_many :segments
+  has_many :segments, conditions: { } # Segments don't have a deleted flag
 
   # User Methods
 
@@ -46,14 +47,19 @@ class User < ActiveRecord::Base
     end
   end
 
+  def all_viewable_segments
+    self.all_segments
+  end
+
   # Overriding Devise built-in active_for_authentication? method
   def active_for_authentication?
     super and self.status == 'active' and not self.deleted?
   end
 
   def destroy
-    update_attribute :deleted, true
-    update_attribute :status, 'inactive'
+    update_column :deleted, true
+    update_column :status, 'inactive'
+    update_column :updated_at, Time.now
   end
 
   def email_on?(value)
@@ -90,14 +96,6 @@ class User < ActiveRecord::Base
   def notify_system_admins
     User.current.system_admins.each do |system_admin|
       UserMailer.notify_system_admin(system_admin, self).deliver if Rails.env.production?
-    end
-  end
-
-  def status_activated
-    unless self.new_record? or self.changes.blank?
-      if self.changes['status'] and self.changes['status'][1] == 'active'
-        UserMailer.status_activated(self).deliver if Rails.env.production?
-      end
     end
   end
 end
