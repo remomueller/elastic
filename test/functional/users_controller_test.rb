@@ -64,6 +64,12 @@ class UsersControllerTest < ActionController::TestCase
     assert_template 'edit'
   end
 
+  test "should not update user with invalid id" do
+    put :update, id: -1, user: @user.attributes
+    assert_nil assigns(:user)
+    assert_redirected_to users_path
+  end
+
   test "should destroy user" do
     assert_difference('User.current.count', -1) do
       delete :destroy, id: @user

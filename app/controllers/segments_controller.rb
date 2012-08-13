@@ -3,11 +3,15 @@ class SegmentsController < ApplicationController
   before_filter :check_system_admin
 
   def index
-    @order = params[:order].blank? ? 'segments.name' : params[:order]
     segment_scope = current_user.all_viewable_segments
     @search_terms = params[:search].to_s.gsub(/[^0-9a-zA-Z]/, ' ').split(' ')
     @search_terms.each{|search_term| segment_scope = segment_scope.search(search_term) }
+
+    @order = scrub_order(Segment, params[:order], 'segments.name')
     segment_scope = segment_scope.order(@order)
+
+    @segment_count = segment_scope.count
+
     @segments = segment_scope.page(params[:page]).per(20)
     respond_to do |format|
       format.html

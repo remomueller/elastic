@@ -6,6 +6,7 @@
 
 * Refactoring
   * Mass-assignment attr_accessible and params slicing implemented to leverage Rails 3.2.x configuration defaults
+  * Consistent sorting and display of model counts used across all objects, (downloaders, segments, users)
 
 * Testing
   * Use ActionDispatch for Integration tests instead of ActionController
