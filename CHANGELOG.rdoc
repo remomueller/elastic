@@ -3,6 +3,9 @@
 * Enhancements
   * Updated to Rails 3.2.8
     * Removed deprecated use of update_attribute for Rails 4.0 compatibility
+  * Email Changes:
+    * Default application name is now added to the from: field for emails
+    * Email subjects no longer include the application name
 
 * Refactoring
   * Mass-assignment attr_accessible and params slicing implemented to leverage Rails 3.2.x configuration defaults
