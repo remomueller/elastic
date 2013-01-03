@@ -6,12 +6,12 @@ gem 'rails',                '3.2.10'
 # Install instructions for Windows: http://blog.mmediasys.com/2011/07/07/installing-mysql-on-windows-7-x64-and-using-ruby-with-it/
 gem 'mysql2',               '0.3.11'
 gem 'thin',                 '~> 1.4.1',           :platforms => [ :mswin, :mingw ]
-gem 'eventmachine',         '~> 1.0.0.rc.4',      :platforms => [ :mswin, :mingw ]
+gem 'eventmachine',         '~> 1.0.0',           :platforms => [ :mswin, :mingw ]
 
 # Gems used by project
-gem 'contour',              '~> 1.0.3'
-gem 'kaminari',             '~> 0.13.0'
-gem 'carrierwave',          '~> 0.6.2'
+gem 'contour',              '~> 1.1.1'
+gem 'kaminari',             '~> 0.14.1'
+gem 'carrierwave',          '~> 0.7.1'
 # SystemU: Running ocra system command
 gem 'systemu',              '~> 2.5.2'
 # OCRA: Compiling Ruby into Windows executable
@@ -32,5 +32,5 @@ group :test do
   # Pretty printed test output
   gem 'win32console',                             :platforms => [ :mswin, :mingw ]
   gem 'turn',               '~> 0.9.6'
-  gem 'simplecov',          '~> 0.6.4',           :require => false
+  gem 'simplecov',          '~> 0.7.1',           :require => false
 end
