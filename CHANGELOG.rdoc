@@ -3,6 +3,9 @@
 * Security Fix
   * Updated Rails to 3.2.10
 
+* Enhancements
+  * Updated to Ruby 1.9.3-p327
+
 * Bug Fix
   * User activation emails are no longer sent out when a user's status is changed from pending to inactive
 
