@@ -3,6 +3,9 @@
 * Security Fix
   * Updated Rails to 3.2.11
 
+* Enhancements
+  * Updated to Thin 1.5.0
+
 == 0.5.5 (January 3, 2013)
 
 * Security Fix
