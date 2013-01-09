@@ -1,4 +1,4 @@
-= Elastic File Server {<img src="https://secure.travis-ci.org/remomueller/elastic.png"/>}[http://travis-ci.org/remomueller/elastic] {<img src="https://gemnasium.com/remomueller/elastic.png" alt="Dependency Status" />}[https://gemnasium.com/remomueller/elastic]
+= Elastic File Server {<img src="https://secure.travis-ci.org/remomueller/elastic.png"/>}[http://travis-ci.org/remomueller/elastic] {<img src="https://gemnasium.com/remomueller/elastic.png" alt="Dependency Status" />}[https://gemnasium.com/remomueller/elastic] {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/remomueller/elastic]
 
 Elastic file aggregator and server. Using Rails 3.2+ and Ruby 1.9.3+.
 
