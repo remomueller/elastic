@@ -11,7 +11,7 @@ gem 'eventmachine',         '~> 1.0.0',           :platforms => [ :mswin, :mingw
 # Gems used by project
 gem 'contour',              '~> 1.1.2'
 gem 'kaminari',             '~> 0.14.1'
-gem 'carrierwave',          '~> 0.7.1'
+gem 'carrierwave',          '~> 0.8.0'
 # SystemU: Running ocra system command
 gem 'systemu',              '~> 2.5.2'
 # OCRA: Compiling Ruby into Windows executable
