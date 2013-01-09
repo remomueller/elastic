@@ -1,4 +1,4 @@
-== 0.5.7
+== 0.5.7 (January 9, 2013)
 
 * Enhancements
   * Updated CarrierWave to 0.8.0
