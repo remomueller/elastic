@@ -16,6 +16,7 @@ gem 'carrierwave',          '~> 0.8.0'
 gem 'systemu',              '~> 2.5.2'
 # OCRA: Compiling Ruby into Windows executable
 gem 'ocra',                                       :platforms => [ :mswin, :mingw ]
+gem 'ruby-ntlm-namespace',  '~> 0.0.1'
 
 # Gems used only for assets and not required
 # in production environments by default.
