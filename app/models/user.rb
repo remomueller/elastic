@@ -46,10 +46,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def all_viewable_segments
-    self.all_segments
-  end
-
   # Overriding Devise built-in active_for_authentication? method
   def active_for_authentication?
     super and self.status == 'active' and not self.deleted?
