@@ -7,7 +7,7 @@
 # Install Elastic
 
   Open Git Bash and go to your preferred Elastic folder.
-  
+
   This install assumes you'll install it in c:\web\elastic
 
     cd c:
@@ -25,7 +25,7 @@
   Install required gems
 
     bundle install
-    
+
   Run Initial Setup to Stage remaining required files
 
     ruby lib/initial_setup.rb
@@ -63,16 +63,16 @@
   Application=c:\Ruby192\bin\ruby.exe
   AppDirectory=c:\web\elastic
   AppParameters=c:\Ruby192\bin\thin start -p [my_port_number] -e production
-  
+
 # Remember to set your service to autorestart
 # In Services Panel->[my_service_name]->Properties->General, set:
   Startup type: Automatic
-  
+
 # In Services Panel->[my_service_name]->Properties->Recovery, set:
   First failure: Restart the Service
   Second failure: Restart the Service
   Subsequent failures: Restart the Service
-  
+
 # In Services Panel->[my_service_name]->Properties->Log On, set:
   Log on as: Local System account
 

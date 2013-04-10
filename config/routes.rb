@@ -16,8 +16,8 @@ Elastic::Application.routes.draw do
     end
   end
 
-  match "/about" => "sites#about", as: :about
-  match "/settings" => "users#settings", as: :settings
+  get "/about" => "application#about", as: :about
+  get "/settings" => "users#settings", as: :settings
 
   root to: "downloaders#index"
 

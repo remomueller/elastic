@@ -4,7 +4,7 @@
 [![Dependency Status](https://gemnasium.com/remomueller/elastic.png)](https://gemnasium.com/remomueller/elastic)
 [![Code Climate](https://codeclimate.com/github/remomueller/elastic.png)](https://codeclimate.com/github/remomueller/elastic)
 
-Elastic file aggregator and server. Using Rails 3.2+ and Ruby 2.0.0+.
+Elastic file aggregator and server. Using Rails 4.0+ and Ruby 2.0.0+.
 
 ## Installation
 
