@@ -1,6 +1,9 @@
 class Downloader < ActiveRecord::Base
   # attr_accessible :name, :comments, :download_token, :simple_executable_file, :folder, :external_user_id, :files_digest, :target_file_name
 
+  # Concerns
+  include Searchable
+
   # Named Scopes
   scope :current, -> { where deleted: false }
 
@@ -15,6 +18,10 @@ class Downloader < ActiveRecord::Base
   attr_reader :files
 
   mount_uploader :simple_executable_file, FileUploader
+
+  def destroy
+    update_column :deleted, true
+  end
 
   def simple_executable_file_url
     (self.simple_executable_file and self.simple_executable_file.url) ? SITE_URL + self.simple_executable_file.url : ''
