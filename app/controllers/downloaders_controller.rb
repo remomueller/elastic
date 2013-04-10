@@ -1,6 +1,6 @@
 class DownloadersController < ApplicationController
-  before_filter :authenticate_user!, except: ['download_file']
-  before_filter :check_system_admin, except: ['download_file', 'index']
+  before_action :authenticate_user!, except: ['download_file']
+  before_action :check_system_admin, except: ['download_file', 'index']
 
   def download_file
     @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])

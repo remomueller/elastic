@@ -1,6 +1,6 @@
 class SegmentsController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :check_system_admin
+  before_action :authenticate_user!
+  before_action :check_system_admin
 
   def index
     segment_scope = current_user.all_viewable_segments
