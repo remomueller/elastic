@@ -1,8 +1,8 @@
 class Segment < ActiveRecord::Base
-  attr_accessible :name, :checksum, :file_path
+  # attr_accessible :name, :checksum, :file_path
 
   # Named Scopes
-  scope :current, conditions: { }
+  scope :current, -> { all }
 
   # Model Validation
   validates_presence_of :file_path
@@ -11,7 +11,7 @@ class Segment < ActiveRecord::Base
   # Model Relationships
   belongs_to :user
   has_many :downloader_segments
-  has_many :downloaders, through: :downloader_segments, conditions: { deleted: false }
+  has_many :downloaders, -> { where deleted: false }, through: :downloader_segments
 
   # Model Methods
 

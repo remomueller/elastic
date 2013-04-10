@@ -1,8 +1,8 @@
 class Downloader < ActiveRecord::Base
-  attr_accessible :name, :comments, :download_token, :simple_executable_file, :folder, :external_user_id, :files_digest, :target_file_name
+  # attr_accessible :name, :comments, :download_token, :simple_executable_file, :folder, :external_user_id, :files_digest, :target_file_name
 
   # Named Scopes
-  scope :current, conditions: { deleted: false }
+  scope :current, -> { where deleted: false }
 
   # Model Validation
   validates_presence_of :name

@@ -24,6 +24,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should get users segments for valid user" do
-    assert users(:valid).all_segments.kind_of?(Array)
+    assert_equal true, users(:valid).all_segments.kind_of?(ActiveRecord::Relation)
   end
 end
