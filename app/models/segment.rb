@@ -1,6 +1,9 @@
 class Segment < ActiveRecord::Base
   # attr_accessible :name, :checksum, :file_path
 
+  # Concerns
+  include Searchable
+
   # Named Scopes
   scope :current, -> { all }
 
