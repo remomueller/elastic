@@ -1,5 +1,8 @@
 ## 0.6.1
 
+### Bug Fix
+- Since Windows version doesn't run through Apache or Nginx, serve static assets directly through Rails
+
 ## 0.6.0 (April 11, 2013)
 
 ### Breaking Change
