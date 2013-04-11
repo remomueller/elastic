@@ -122,7 +122,7 @@ class Downloader < ActiveRecord::Base
   def generate_segments!(new_files, new_folder)
     updated_file_locations = Downloader.filter_files(new_files, new_folder)[:path]
     updated_file_locations.each do |file_location|
-      segment = Segment.find_or_create_by_file_path(file_location)
+      segment = Segment.where(file_path: file_location).first_or_create
       self.segments << segment unless self.segments.pluck('segments.id').include?(segment.id)
     end
   end

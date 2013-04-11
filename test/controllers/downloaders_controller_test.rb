@@ -98,23 +98,6 @@ class DownloadersControllerTest < ActionController::TestCase
     assert_redirected_to downloader_path(assigns(:downloader))
   end
 
-  test "should create downloader for xml message" do
-    assert_difference('Downloader.count') do
-      post :create, downloader: { files: "checksum.txt\nmissing.txt\ntest_file.txt", name: 'Download_3_Files', folder: 'test' }, target_file_name: 'downloader3', format: 'xml'
-    end
-    assert_not_nil assigns(:downloader)
-
-    assert_equal 3, assigns(:downloader).downloader_segments.size
-    assert_equal 3, assigns(:downloader).segments.size
-
-    assert_equal assigns(:downloader).files_digest, @response.body.scan(/<files-digest>(.*?)<\/files-digest>/m).flatten.first
-    assert_equal "3", @response.body.scan(/<file-count .*?>(.*?)<\/file-count>/m).flatten.first
-    assert_equal users(:admin).to_param, @response.body.scan(/<user-id .*?>(.*?)<\/user-id>/m).flatten.first
-    assert_equal assigns(:downloader).download_token, @response.body.scan(/<download-token>(.*?)<\/download-token>/m).flatten.first
-    assert_equal assigns(:downloader).folder, @response.body.scan(/<folder>(.*?)<\/folder>/m).flatten.first
-    assert_response :success
-  end
-
   test "should create downloader for json message" do
     assert_difference('Downloader.count') do
       post :create, downloader: { files: "checksum.txt\nmissing.txt\ntest_file.txt", name: 'Download_3_Files', folder: 'test' }, target_file_name: 'downloader3', format: 'json'
@@ -180,7 +163,7 @@ class DownloadersControllerTest < ActionController::TestCase
   end
 
   test "should destroy downloader" do
-    assert_difference('Downloader.count', -1) do
+    assert_difference('Downloader.current.count', -1) do
       delete :destroy, id: @downloader
     end
 

@@ -1,6 +1,8 @@
 class DownloadersController < ApplicationController
-  before_action :authenticate_user!, except: ['download_file']
-  before_action :check_system_admin, except: ['download_file', 'index']
+  before_action :authenticate_user!, except: [ :download_file ]
+  before_action :check_system_admin, except: [ :download_file, :index ]
+  before_action :set_downloader, only: [ :show, :edit, :update, :destroy ]
+  before_action :redirect_without_downloader, only: [ :show, :edit, :update, :destroy ]
 
   def download_file
     @downloader = Downloader.find_by_id_and_download_token(params[:id], params[:download_token])
@@ -20,63 +22,40 @@ class DownloadersController < ApplicationController
         end
       else
         error = "The file is no longer available"
-        logger.debug error
+        Rails.logger.debug error
         render text: error, status: 404, layout: false
       end
     else
       error = "No longer authorized to download this file"
-      logger.debug error
+      Rails.logger.debug error
       render text: error, status: 404
     end
   end
 
+  # GET /downloaders
+  # GET /downloaders.json
   def index
-    # current_user.update_column :downloaders_per_page, params[:downloaders_per_page].to_i if params[:downloaders_per_page].to_i >= 10 and params[:downloaders_per_page].to_i <= 200
-
-    downloader_scope = current_user.all_downloaders
-    @search_terms = params[:search].to_s.gsub(/[^0-9a-zA-Z]/, ' ').split(' ')
-    @search_terms.each{|search_term| downloader_scope = downloader_scope.search(search_term) }
-
     @order = scrub_order(Downloader, params[:order], 'downloaders.name')
-    downloader_scope = downloader_scope.order(@order)
-
-    @downloader_count = downloader_scope.count
-
-    @downloaders = downloader_scope.page(params[:page]).per(20) #(current_user.downloaders_per_page)
-    respond_to do |format|
-      format.html
-      format.js
-      format.json { render json: @downloaders, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file] }
-    end
+    @downloaders = current_user.all_downloaders.search(params[:search]).order(@order).page(params[:page]).per(20)
   end
 
+  # GET /downloaders/1
+  # GET /downloaders/1.json
   def show
-    @downloader = Downloader.find(params[:id])
-
     @downloader.generate_simple_executable! if @downloader.simple_executable_file_url.blank?
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render xml: @downloader.to_xml(methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file]) }
-      format.json { render json: @downloader, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file] }
-    end
   end
 
+  # GET /downloaders/new
   def new
     @downloader = current_user.downloaders.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @downloader }
-      format.json { render json: @downloader }
-    end
   end
 
+  # GET /downloaders/1/edit
   def edit
-    @downloader = current_user.downloaders.find_by_id(params[:id])
-    redirect_to root_path unless @downloader
   end
 
+  # POST /downloaders
+  # POST /downloaders.json
   def create
     new_files = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
     params[:downloader][:files_digest] = Digest::SHA1.hexdigest(new_files)
@@ -84,8 +63,7 @@ class DownloadersController < ApplicationController
     params[:downloader][:name] = new_files.split(/[\r\n]/).first if params[:downloader][:name].blank?
     params[:target_file_name] = params[:downloader][:name] if params[:target_file_name].blank?
 
-
-    params[:downloader] = post_params
+    params[:downloader] = downloader_params
 
 
     params[:downloader][:download_token] = Digest::SHA1.hexdigest(Time.now.usec.to_s)
@@ -96,74 +74,74 @@ class DownloadersController < ApplicationController
       @downloader.generate_simple_executable! if @downloader.simple_executable_file_url.blank?
 
       respond_to do |format|
-        format.html { redirect_to(@downloader, notice: 'Equivalent downloader retrieved.') }
-        format.xml  { render xml: @downloader.to_xml(methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file]) }
-        format.json { render json: @downloader, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file], status: :created, location: @downloader }
+        format.html { redirect_to @downloader, notice: 'Equivalent downloader retrieved.' }
+        format.json { render action: 'show', status: :created, location: @downloader }
       end
     else
 
-      @downloader = current_user.downloaders.new(post_params)
+      @downloader = current_user.downloaders.new(downloader_params)
 
       respond_to do |format|
         if @downloader.save
           @downloader.generate_segments!(new_files, params[:downloader][:folder])
           @downloader.generate_simple_executable!
-          format.html { redirect_to(@downloader, notice: 'Downloader was successfully created.') }
-          format.xml  { render xml: @downloader.to_xml(methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file]), status: :created, location: @downloader }
-          format.json { render json: @downloader, methods: [:file_count, :simple_executable_file_url], except: [:simple_executable_file], status: :created, location: @downloader }
+          format.html { redirect_to @downloader, notice: 'Downloader was successfully created.' }
+          format.json { render action: 'show', status: :created, location: @downloader }
         else
-          format.html { render action: "new" }
-          format.xml  { render xml: @downloader.errors, status: :unprocessable_entity }
+          format.html { render action: 'new' }
           format.json { render json: @downloader.errors, status: :unprocessable_entity }
         end
       end
     end
   end
 
+  # PUT /downloaders/1
+  # PUT /downloaders/1.json
   def update
     new_files = Downloader.filter_files(params[:downloader][:files], params[:downloader][:folder])[:base]
     params[:downloader][:files_digest] = Digest::SHA1.hexdigest(new_files)
+    params[:downloader] = downloader_params
 
-    params[:downloader] = post_params
-
-    @downloader = Downloader.find_by_id(params[:id])
-
-    same_files = (params[:downloader][:files_digest] == @downloader.files_digest and params[:downloader][:folder] == @downloader.folder) if @downloader
+    same_files = (params[:downloader][:files_digest] == @downloader.files_digest and params[:downloader][:folder] == @downloader.folder)
 
     respond_to do |format|
-      if @downloader.update_attributes(params[:downloader])
+      if @downloader.update(params[:downloader])
         @downloader.generate_simple_executable! unless same_files
-        format.html { redirect_to(@downloader, notice: 'Downloader was successfully updated.') }
-        format.xml  { head :ok }
-        format.json  { head :ok }
+        format.html { redirect_to @downloader, notice: 'Downloader was successfully updated.' }
+        format.json { head :no_content }
       else
-        format.html { render action: "edit" }
-        format.xml  { render xml: @downloader.errors, status: :unprocessable_entity }
+        format.html { render action: 'edit' }
         format.json { render json: @downloader.errors, status: :unprocessable_entity }
       end
     end
 
   end
 
+  # DELETE /downloaders/1
+  # DELETE /downloaders/1.json
   def destroy
-    @downloader = Downloader.find(params[:id])
     @downloader.destroy
 
     respond_to do |format|
-      format.html { redirect_to(downloaders_path) }
-      format.xml  { head :ok }
-      format.json  { head :ok }
+      format.html { redirect_to downloaders_path, notice: 'Downloader was successfully deleted.' }
+      format.json { head :no_content }
     end
   end
 
   private
 
-  def post_params
-    params[:downloader] ||= {}
+    def set_downloader
+      @downloader = Downloader.current.find_by_id(params[:id])
+    end
 
-    params[:downloader].slice(
-      :name, :comments, :download_token, :simple_executable_file, :folder, :external_user_id, :files_digest, :target_file_name
-    )
-  end
+    def redirect_without_downloader
+      empty_response_or_root_path unless @downloader
+    end
+
+    def downloader_params
+      params.require(:downloader).permit(
+        :name, :comments, :download_token, :simple_executable_file, :folder, :external_user_id, :files_digest, :target_file_name
+      )
+    end
 
 end

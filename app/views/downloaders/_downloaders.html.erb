@@ -1,4 +1,4 @@
-<%= render partial: 'contour/layouts/per_page', locals: { type: 'downloaders', object_count: @downloader_count } %>
+<%= render partial: 'contour/layouts/per_page', locals: { type: 'downloaders', per_page: [20, @downloaders.count].min, object_count: @downloaders.total_count } %>
 
 <table class="table table-striped table-bordered" style="width:100%">
   <thead>
