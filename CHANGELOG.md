@@ -1,4 +1,4 @@
-## 0.6.0
+## 0.6.0 (April 11, 2013)
 
 ### Breaking Change
 - Deprecated support for XML messaging in favor of JSON web API
