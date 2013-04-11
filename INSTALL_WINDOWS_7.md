@@ -7,7 +7,7 @@ The following provides instructions to install elastic file server on Windows as
 
 Open Git Bash and go to your preferred Elastic folder.
 
-This install assumes you'll install it in c:\web\elastic
+This install assumes you'll install it in `c:\web\elastic`
 
 ```console
 cd c:
