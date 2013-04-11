@@ -1,3 +1,5 @@
+## 0.6.1
+
 ## 0.6.0 (April 11, 2013)
 
 ### Breaking Change
