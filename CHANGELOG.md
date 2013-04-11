@@ -1,5 +1,8 @@
 ## 0.6.0
 
+### Breaking Change
+- Deprecated support for XML messaging in favor of JSON web API
+
 ### Enhancements
 - **Gem Changes**
   - Updated to Rails 4.0.0.beta1
